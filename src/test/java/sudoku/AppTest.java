@@ -1,27 +1,45 @@
 package sudoku;
 
-import sudoku.Grid;
 import sudoku.Grid.Digit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-{
+public class AppTest {
     @Test
-    public void testGetSet()
-    {
+    public void gridStartsEmpty() {
         Grid grid = new Grid();
         assertFalse(grid.get(0, 0).isPresent());
+    }
+
+    @Test
+    public void getAfterSet() {
+        Grid grid = new Grid();
         grid.set(0, 0, Digit.ONE);
-        assertEquals(Digit.ONE, grid.get(0, 0).get());
+        assertEquals(Integer.valueOf(1), grid.get(0, 0).get());
+    }
+
+    @Test
+    public void getWithBadIndicesThrowsException() {
+        Grid grid = new Grid();
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(-1, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(9, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(0, -1); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(0, 9); });
+    }
+
+    @Test
+    public void settingCellTwiceThrowsException() {
+        Grid grid = new Grid();
+        assertThrows(IllegalArgumentException.class, () -> {
+            grid.set(0, 0, Digit.ONE);
+            grid.set(0, 0, Digit.TWO);
+        });
     }
 }
