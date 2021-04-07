@@ -1,7 +1,5 @@
 package sudoku;
 
-import java.util.Optional;
-
 /**
  * Hello world!
  *

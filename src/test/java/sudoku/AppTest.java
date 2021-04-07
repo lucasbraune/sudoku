@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import sudoku.Grid.Digit;
 import sudoku.Grid.GridOverwriteException;
-import sudoku.Grid.GridParsingException;
+import sudoku.GridParser.GridParserException;
 
 /**
  * Unit test for simple App.
@@ -109,12 +109,7 @@ public class AppTest {
     }
 
     @Test
-    public void gridParsingExceptionIsThrown() {
-        assertThrows(GridParsingException.class, () -> { Grid.from("Too short"); });
-    }
-
-    @Test
-    public void stringToGrid() throws GridParsingException {
-        assertEquals(sampleGrid(), Grid.from(sampleGridToString));
+    public void stringToGrid() throws GridParserException {
+        assertEquals(sampleGrid(), GridParser.parse(sampleGridToString));
     }
 }
