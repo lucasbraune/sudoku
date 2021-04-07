@@ -1,12 +1,12 @@
 package sudoku;
 
-import sudoku.Grid.Digit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+
+import sudoku.Grid.Digit;
 
 /**
  * Unit test for simple App.

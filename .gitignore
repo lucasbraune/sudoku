@@ -1,6 +1,7 @@
-.vscode/*
 .classpath
 .project
+.factorypath
+.vscode/*
 .settings/*
 bin/*
 target/*
