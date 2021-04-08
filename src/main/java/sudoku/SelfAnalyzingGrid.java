@@ -69,10 +69,6 @@ public class SelfAnalyzingGrid {
         return candidates.keySet();
     }
 
-    public boolean isSolved() {
-        return !hasEmptyCell() && isConsistent();
-    }
-
     private void copySolutionFrom(Grid solved) {
         try {
             for (Cell coords : emptyCells()) {
@@ -81,7 +77,7 @@ public class SelfAnalyzingGrid {
         } catch (NoSuchElementException e) {
             throw new IllegalArgumentException("The given grid has empty cells");
         }
-        if (!isSolved()) {
+        if (!grid.isSolved()) {
             throw new IllegalArgumentException("The given grid is not a solution of this grid.");
         }
         candidates.clear();
@@ -108,7 +104,15 @@ public class SelfAnalyzingGrid {
     }
 
     private boolean isConsistent() {
-        return grid.isConsistent();
+        if (!grid.isConsistent()) {
+            return false;
+        }
+        for (Cell cell : emptyCells()) {
+            if (candidates.get(cell).size() == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void setCell(Cell cell, Digit d) {
@@ -126,7 +130,7 @@ public class SelfAnalyzingGrid {
     }
 
     private void removeCandidate(Cell coords, Digit d) {
-        // TODO
+        candidates.get(coords).remove(d);
     }
 
     public boolean solve() {
