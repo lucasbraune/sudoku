@@ -8,46 +8,31 @@ import java.util.Set;
 
 import lombok.Getter;
 import sudoku.GridElements.Cell;
+import util.Util;
 import sudoku.Grid.Digit;
 
 public class SelfAnalyzingGrid {
     @Getter
     private final Grid grid;
 
-    private final Map<Cell, Set<Digit>> possibilities;
+    @Getter
+    private final Map<Cell, Set<Digit>> candidates;
 
-    private SelfAnalyzingGrid(Grid grid, Map<Cell, Set<Digit>> possibilities) {
+    private SelfAnalyzingGrid(Grid grid, Map<Cell, Set<Digit>> candidates) {
         this.grid = grid;
-        this.possibilities = possibilities;
+        this.candidates = candidates;
     }
 
-    private static Map<Cell, Set<Digit>> allPossibilities(Grid grid) {
+    private static Map<Cell, Set<Digit>> allCandidates(Grid grid) {
         Map<Cell, Set<Digit>> all = new HashMap<>();
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-                Cell coords = Cell.from(row, col);
-                if (!grid.digit(coords).isPresent()) {
-                    all.put(coords, EnumSet.allOf(Digit.class));
-                }
-            }
+        for (Cell cell : grid.emptyCells()) {
+            all.put(cell, EnumSet.allOf(Digit.class));
         }
         return all;
     }
 
     public SelfAnalyzingGrid(Grid grid) {
-        this(grid, allPossibilities(grid));
-    }
-
-    /**
-     * Returns a deep copy of a map whose values are set of objets of an enumeration
-     * class.
-     */
-    private static <K, E extends Enum<E>> Map<K, Set<E>> copy(Map<? extends K, ? extends Set<E>> map) {
-        Map<K, Set<E>> copy = new HashMap<>();
-        for (K key : map.keySet()) {
-            copy.put(key, EnumSet.copyOf(map.get(key)));
-        }
-        return copy;
+        this(grid, allCandidates(grid));
     }
 
     /**
@@ -55,11 +40,11 @@ public class SelfAnalyzingGrid {
      */
     @Override
     public SelfAnalyzingGrid clone() {
-        return new SelfAnalyzingGrid(grid.clone(), copy(possibilities));
+        return new SelfAnalyzingGrid(grid.clone(), Util.copy(candidates));
     }
 
     private Set<Cell> emptyCells() {
-        return possibilities.keySet();
+        return candidates.keySet();
     }
 
     public boolean isSolved() {
@@ -77,7 +62,7 @@ public class SelfAnalyzingGrid {
         if (!isSolved()) {
             throw new IllegalArgumentException("The given grid is not a solution of this grid.");
         }
-        possibilities.clear();
+        candidates.clear();
     }
 
     private boolean hasEmptyCell() {
@@ -90,8 +75,7 @@ public class SelfAnalyzingGrid {
     }
 
     private boolean isConsistent() {
-        // TODO
-        return false;
+        return grid.isConsistent();
     }
 
     private void setCell(Cell coords, Digit d) {
@@ -99,11 +83,11 @@ public class SelfAnalyzingGrid {
     }
 
     private Digit candidateFor(Cell coords) {
-        return possibilities.get(coords).iterator().next();
+        return candidates.get(coords).iterator().next();
     }
 
     private boolean multipleCandidatesExistFor(Cell coords) {
-        return possibilities.get(coords).size() > 1;
+        return candidates.get(coords).size() > 1;
     }
 
     private void removeCandidate(Cell coords, Digit d) {

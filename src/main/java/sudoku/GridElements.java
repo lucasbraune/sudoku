@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @EqualsAndHashCode
 public class GridElements {
@@ -44,6 +45,11 @@ public class GridElements {
             return new Cell(row, column);
         }
 
+        @Override
+        public String toString() {
+            return "Cell(" + row + ", " + column + ")";
+        }
+
     }
 
     @EqualsAndHashCode
@@ -53,12 +59,16 @@ public class GridElements {
         private final int index;
 
         private Row(int index) {
-            checkRowIndex(index);
             this.index = index; 
         }
 
         public static Row from(int index) {
+            checkRowIndex(index);
             return new Row(index);
+        }
+
+        public static Row from(Cell cell) {
+            return new Row(cell.getRow());
         }
 
         @Override
@@ -87,12 +97,16 @@ public class GridElements {
         private final int index;
 
         private Column(int index) {
-            checkColumnIndex(index);
             this.index = index; 
         }
 
         public static Column from(int index) {
+            checkColumnIndex(index);
             return new Column(index);
+        }
+
+        public static Column from(Cell cell) {
+            return new Column(cell.getColumn());
         }
 
         @Override
@@ -165,7 +179,9 @@ public class GridElements {
 
             @Override
             public Cell next() {
-                return Cell.from(i / 9, i % 9);
+                Cell cell = Cell.from(i / 9, i % 9);
+                ++i;
+                return cell;
             }  
         };
     }

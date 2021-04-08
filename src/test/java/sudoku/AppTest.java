@@ -4,10 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import sudoku.Grid.Digit;
 import sudoku.Grid.GridOverwriteException;
+import sudoku.GridElements.Box;
+import sudoku.GridElements.Cell;
+import sudoku.GridElements.Column;
+import sudoku.GridElements.Row;
 import sudoku.GridParser.GridParserException;
 
 /**
@@ -112,4 +118,26 @@ public class AppTest {
     public void stringToGrid() throws GridParserException {
         assertEquals(sampleGrid(), GridParser.parse(sampleGridToString));
     }
+
+    @Test
+    public void digitNotCandidateInOwnRowColumnOrBox() throws GridParserException {
+        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(GridParser.parse(sampleGridToString));
+        Grid grid = sag.getGrid();
+        for (Cell emptyCell : grid.emptyCells()) {
+            Set<Digit> candidates = sag.getCandidates().get(emptyCell);
+            for (Cell cell : grid.nonEmptyCells(Row.from(emptyCell))) {
+                Digit d = grid.digit(cell).get();
+                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+            }
+            for (Cell cell : grid.nonEmptyCells(Column.from(emptyCell))) {
+                Digit d = grid.digit(cell).get();
+                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+            }
+            for (Cell cell : grid.nonEmptyCells(Box.from(emptyCell))) {
+                Digit d = grid.digit(cell).get();
+                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+            }
+        }
+    }
+
 }

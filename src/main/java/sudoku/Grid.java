@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -172,12 +173,44 @@ public class Grid {
         return true;
     }
 
-    public boolean hasEmptyCell() {
-        return emptyCells().iterator().hasNext();
+    private Predicate<Cell> isEmpty() {
+        return cell -> !digit(cell).isPresent();
     }
 
     public Iterable<Cell> emptyCells() {
-        return Util.filter(GridElements.allCells(), cell -> !digit(cell).isPresent());
+        return Util.filter(GridElements.allCells(), isEmpty());
+    }
+
+    public Iterable<Cell> nonEmptyCells() {
+        return Util.filter(GridElements.allCells(), isEmpty().negate());
+    }
+
+    public Iterable<Cell> emptyCells(Row row) {
+        return Util.filter(row, isEmpty());
+    }
+
+    public Iterable<Cell> nonEmptyCells(Row row) {
+        return Util.filter(row, isEmpty().negate());
+    }
+
+    public Iterable<Cell> emptyCells(Column column) {
+        return Util.filter(column, isEmpty());
+    }
+
+    public Iterable<Cell> nonEmptyCells(Column column) {
+        return Util.filter(column, isEmpty().negate());
+    }
+
+    public Iterable<Cell> emptyCells(Box box) {
+        return Util.filter(box, isEmpty());
+    }
+
+    public Iterable<Cell> nonEmptyCells(Box box) {
+        return Util.filter(box, isEmpty().negate());
+    }
+
+    public boolean hasEmptyCell() {
+        return emptyCells().iterator().hasNext();
     }
 
     public boolean isSolved() {

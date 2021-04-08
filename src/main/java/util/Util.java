@@ -1,7 +1,11 @@
 package util;
 
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -39,6 +43,18 @@ public class Util {
             }
 
         };
+    }
+
+    /**
+     * Returns a deep copy of a map whose values are set of objets of an enumeration
+     * class.
+     */
+    public static <K, E extends Enum<E>> Map<K, Set<E>> copy(Map<? extends K, ? extends Set<E>> map) {
+        Map<K, Set<E>> copy = new HashMap<>();
+        for (K key : map.keySet()) {
+            copy.put(key, EnumSet.copyOf(map.get(key)));
+        }
+        return copy;
     }
     
 }
