@@ -5,14 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import sudoku.Grid.Digit;
 import sudoku.Grid.GridOverwriteException;
@@ -180,13 +187,45 @@ public class AppTest {
         assertTrue(App.solve(grid));
     }
 
+    private static String readLines(BufferedReader br, int n) throws IOException {
+        if (n < 0) throw new IllegalArgumentException("The number of lines given is negative (" + n + ")");
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<n; i++) {
+            sb.append(br.readLine());
+        }
+        return sb.toString();
+    }
+
+    private static List<Grid> readGrids() throws IOException, GridParserException {
+        List<Grid> grids = new ArrayList<>();
+        File file = new File("src/test/resources/puzzles.txt");
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            for (int i=0; i<50; i++) {
+                br.readLine();
+                Grid grid = GridParser.parse(readLines(br, 9), /* separator */ "");
+                grids.add(grid);
+            }
+        }
+        return grids;
+    }
+
     @Test
     public void canReadGrids() throws IOException, GridParserException {
-        List<Grid> grids = App.readGrids();
+        List<Grid> grids = readGrids();
         assertTrue(grids.size() == 50);
-        for (Grid grid : grids) {
-            assertTrue(grid.isConsistent());
-        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("readGrids")
+    public void sampleGridIsConsistent(Grid grid) {
+        assertTrue(grid.isConsistent());
+    }
+
+    @ParameterizedTest
+    @MethodSource("readGrids")
+    @Timeout(value = 1, unit = TimeUnit.SECONDS)
+    public void canSolveSampleGrid(Grid grid) {
+        assertTrue(App.solve(grid));
     }
 
 }
