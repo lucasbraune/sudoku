@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -177,6 +178,15 @@ public class AppTest {
     public void solveFirstPuzzle() throws GridParserException {
         Grid grid = GridParser.parse(sampleGridAsString);
         assertTrue(App.solve(grid));
+    }
+
+    @Test
+    public void canReadGrids() throws IOException, GridParserException {
+        List<Grid> grids = App.readGrids();
+        assertTrue(grids.size() == 50);
+        for (Grid grid : grids) {
+            assertTrue(grid.isConsistent());
+        }
     }
 
 }

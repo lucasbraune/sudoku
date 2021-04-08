@@ -46,13 +46,18 @@ public class GridParser {
     }
 
     public static Grid parse(String str) throws GridParserException {
-        if (str.length() != 90) { // 9 rows * (9 digits + 1 new line character)
+        return parse(str, "\n");
+    }
+
+    public static Grid parse(String str, String separator) throws GridParserException {
+        int lineLength = 9 + separator.length();
+        if (str.length() != 9 * lineLength) {
             throw new GridParserException("String of incorrect size: " + str.length());
         }
         Grid grid = new Grid();
         for (int row=0; row<9; row++) {
             for (int column=0; column<9; column++) {
-                int index = row * 10 + column;
+                int index = row * lineLength + column;
                 Optional<Digit> d = optionalDigitFrom(str.charAt(index));
                 if (d.isPresent()) {
                     grid.set(row, column, d.get());
