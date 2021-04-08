@@ -8,8 +8,11 @@ import java.util.Set;
 
 import lombok.Getter;
 import sudoku.GridElements.Cell;
-import util.Util;
+import sudoku.GridElements.Row;
+import sudoku.GridElements.Column;
+import sudoku.GridElements.Box;
 import sudoku.Grid.Digit;
+import util.Util;
 
 public class SelfAnalyzingGrid {
     @Getter
@@ -31,8 +34,27 @@ public class SelfAnalyzingGrid {
         return all;
     }
 
+    /**
+     * @throws NoSuchElementException if the cell is empty.
+     */
+    private void removeCandidatesFromRowColumnAndBox(Cell nonEmptyCell) {
+        Digit d = grid.digit(nonEmptyCell).get();
+        for (Cell cell : grid.emptyCells(Row.of(nonEmptyCell))) {
+            candidates.get(cell).remove(d);
+        }
+        for (Cell cell : grid.emptyCells(Column.of(nonEmptyCell))) {
+            candidates.get(cell).remove(d);
+        }
+        for (Cell cell : grid.emptyCells(Box.of(nonEmptyCell))) {
+            candidates.get(cell).remove(d);
+        }
+    }
+
     public SelfAnalyzingGrid(Grid grid) {
         this(grid, allCandidates(grid));
+        for (Cell cell : grid.nonEmptyCells()) {
+            removeCandidatesFromRowColumnAndBox(cell);
+        }
     }
 
     /**

@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -119,25 +123,41 @@ public class AppTest {
         assertEquals(sampleGrid(), GridParser.parse(sampleGridToString));
     }
 
+    private static void print(Map<Cell, Set<Digit>> candidates) {
+        StringBuilder sb = new StringBuilder();
+        List<Cell> emptyCells = new ArrayList<>(candidates.keySet());
+        Collections.sort(emptyCells, (cell1, cell2) -> Integer.compare(
+                candidates.get(cell1).size(), candidates.get(cell2).size()));
+        for (Cell cell : emptyCells) {
+            sb.append(cell + ": ");
+            for (Digit d : candidates.get(cell)) {
+                sb.append(d.intValue() + ", ");
+            }
+            sb.append("\n");
+        }
+        System.out.print(sb.toString());
+    }
+
     @Test
     public void digitNotCandidateInOwnRowColumnOrBox() throws GridParserException {
         SelfAnalyzingGrid sag = new SelfAnalyzingGrid(GridParser.parse(sampleGridToString));
         Grid grid = sag.getGrid();
         for (Cell emptyCell : grid.emptyCells()) {
             Set<Digit> candidates = sag.getCandidates().get(emptyCell);
-            for (Cell cell : grid.nonEmptyCells(Row.from(emptyCell))) {
+            for (Cell cell : grid.nonEmptyCells(Row.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
                 assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
             }
-            for (Cell cell : grid.nonEmptyCells(Column.from(emptyCell))) {
+            for (Cell cell : grid.nonEmptyCells(Column.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
                 assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
             }
-            for (Cell cell : grid.nonEmptyCells(Box.from(emptyCell))) {
+            for (Cell cell : grid.nonEmptyCells(Box.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
                 assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
             }
         }
+        // print(sag.getCandidates());
     }
 
 }

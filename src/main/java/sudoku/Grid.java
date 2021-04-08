@@ -121,7 +121,7 @@ public class Grid {
      * @throws IndexOutOfBoundsException if either coordinate is < 0 or >= 9
      */
     public void set(int row, int column, Digit d) {
-        set(Cell.from(row, column), d);
+        set(Cell.of(row, column), d);
     }
 
     public static char charFrom(Optional<Digit> d) {
@@ -146,16 +146,38 @@ public class Grid {
         return sb.toString();
     }
 
+    private Predicate<Cell> isEmpty() {
+        return cell -> !digit(cell).isPresent();
+    }
+
+    public Iterable<Cell> emptyCells(Iterable<Cell> cells) {
+        return Util.filter(cells, isEmpty());
+    }
+
+    public Iterable<Cell> nonEmptyCells(Iterable<Cell> cells) {
+        return Util.filter(cells, isEmpty().negate());
+    }
+
+    public Iterable<Cell> emptyCells() {
+        return emptyCells(GridElements.allCells());
+    }
+
+    public Iterable<Cell> nonEmptyCells() {
+        return nonEmptyCells(GridElements.allCells());
+    }
+
+    public boolean hasEmptyCell() {
+        return emptyCells().iterator().hasNext();
+    }
+
     public boolean isConsistent(Iterable<Cell> rowColumnOrBox) {
         Set<Digit> seen = EnumSet.noneOf(Digit.class);
-        for (Cell cell : rowColumnOrBox) {
-            Optional<Digit> d = digit(cell);
-            if (d.isPresent()) {
-                if (seen.contains(d.get())) {
-                    return false;
-                }
-                seen.add(d.get());
+        for (Cell cell : nonEmptyCells(rowColumnOrBox)) {
+            Digit d = digit(cell).get();
+            if (seen.contains(d)) {
+                return false;
             }
+            seen.add(d);
         }
         return true;
     }
@@ -171,46 +193,6 @@ public class Grid {
             if (!isConsistent(box)) return false;
         }
         return true;
-    }
-
-    private Predicate<Cell> isEmpty() {
-        return cell -> !digit(cell).isPresent();
-    }
-
-    public Iterable<Cell> emptyCells() {
-        return Util.filter(GridElements.allCells(), isEmpty());
-    }
-
-    public Iterable<Cell> nonEmptyCells() {
-        return Util.filter(GridElements.allCells(), isEmpty().negate());
-    }
-
-    public Iterable<Cell> emptyCells(Row row) {
-        return Util.filter(row, isEmpty());
-    }
-
-    public Iterable<Cell> nonEmptyCells(Row row) {
-        return Util.filter(row, isEmpty().negate());
-    }
-
-    public Iterable<Cell> emptyCells(Column column) {
-        return Util.filter(column, isEmpty());
-    }
-
-    public Iterable<Cell> nonEmptyCells(Column column) {
-        return Util.filter(column, isEmpty().negate());
-    }
-
-    public Iterable<Cell> emptyCells(Box box) {
-        return Util.filter(box, isEmpty());
-    }
-
-    public Iterable<Cell> nonEmptyCells(Box box) {
-        return Util.filter(box, isEmpty().negate());
-    }
-
-    public boolean hasEmptyCell() {
-        return emptyCells().iterator().hasNext();
     }
 
     public boolean isSolved() {

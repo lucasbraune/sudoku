@@ -41,13 +41,13 @@ public class GridElements {
             this.column = column;
         }
 
-        public static Cell from(int row, int column) {
+        public static Cell of(int row, int column) {
             return new Cell(row, column);
         }
 
         @Override
         public String toString() {
-            return "Cell(" + row + ", " + column + ")";
+            return "(" + row + ", " + column + ")";
         }
 
     }
@@ -62,12 +62,12 @@ public class GridElements {
             this.index = index; 
         }
 
-        public static Row from(int index) {
+        public static Row of(int index) {
             checkRowIndex(index);
             return new Row(index);
         }
 
-        public static Row from(Cell cell) {
+        public static Row of(Cell cell) {
             return new Row(cell.getRow());
         }
 
@@ -83,7 +83,7 @@ public class GridElements {
     
                 @Override
                 public Cell next() {
-                    return Cell.from(index, i++); 
+                    return Cell.of(index, i++); 
                 }
             };
         }
@@ -100,12 +100,12 @@ public class GridElements {
             this.index = index; 
         }
 
-        public static Column from(int index) {
+        public static Column of(int index) {
             checkColumnIndex(index);
             return new Column(index);
         }
 
-        public static Column from(Cell cell) {
+        public static Column of(Cell cell) {
             return new Column(cell.getColumn());
         }
 
@@ -121,7 +121,7 @@ public class GridElements {
     
                 @Override
                 public Cell next() {
-                    return Cell.from(i++, index); 
+                    return Cell.of(i++, index); 
                 }  
             };
         }
@@ -137,15 +137,15 @@ public class GridElements {
         private final Cell corner;
 
         private Box(int row, int column) {
-            corner = Cell.from(3 * (row / 3), 3 * (column / 3));
+            corner = Cell.of(3 * (row / 3), 3 * (column / 3));
         }
 
-        public static Box from(int row, int column) {
+        public static Box of(int row, int column) {
             checkIndices(row, column);
             return new Box(row, column);
         }
 
-        public static Box from(Cell cell) {
+        public static Box of(Cell cell) {
             return new Box(cell.getRow(), cell.getColumn());
         }
 
@@ -159,7 +159,7 @@ public class GridElements {
                 }
     
                 public Cell next() {
-                    Cell cell = Cell.from(corner.getRow() + i / 3, corner.getColumn() + i % 3);
+                    Cell cell = Cell.of(corner.getRow() + i / 3, corner.getColumn() + i % 3);
                     ++i;
                     return cell;
                 }
@@ -179,7 +179,7 @@ public class GridElements {
 
             @Override
             public Cell next() {
-                Cell cell = Cell.from(i / 9, i % 9);
+                Cell cell = Cell.of(i / 9, i % 9);
                 ++i;
                 return cell;
             }  
@@ -197,7 +197,7 @@ public class GridElements {
 
             @Override
             public Row next() {
-                return Row.from(i++);
+                return Row.of(i++);
             }
         };
     }
@@ -213,7 +213,7 @@ public class GridElements {
 
             @Override
             public Column next() {
-                return Column.from(i++);
+                return Column.of(i++);
             }
         };
     }
@@ -229,7 +229,7 @@ public class GridElements {
 
             @Override
             public Box next() {
-                return Box.from(3 * (i / 3), 3 * (i % 3));
+                return Box.of(3 * (i / 3), 3 * (i % 3));
             }  
         };
     }
