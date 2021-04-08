@@ -7,26 +7,26 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import lombok.Getter;
-import sudoku.Grid.Coordinates;
+import sudoku.GridElements.Cell;
 import sudoku.Grid.Digit;
 
 public class SelfAnalyzingGrid {
     @Getter
     private final Grid grid;
 
-    private final Map<Coordinates, Set<Digit>> possibilities;
+    private final Map<Cell, Set<Digit>> possibilities;
 
-    private SelfAnalyzingGrid(Grid grid, Map<Coordinates, Set<Digit>> possibilities) {
+    private SelfAnalyzingGrid(Grid grid, Map<Cell, Set<Digit>> possibilities) {
         this.grid = grid;
         this.possibilities = possibilities;
     }
 
-    private static Map<Coordinates, Set<Digit>> allPossibilities(Grid grid) {
-        Map<Coordinates, Set<Digit>> all = new HashMap<>();
+    private static Map<Cell, Set<Digit>> allPossibilities(Grid grid) {
+        Map<Cell, Set<Digit>> all = new HashMap<>();
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                Coordinates coords = new Coordinates(row, col);
-                if (!grid.get(coords).isPresent()) {
+                Cell coords = Cell.from(row, col);
+                if (!grid.digit(coords).isPresent()) {
                     all.put(coords, EnumSet.allOf(Digit.class));
                 }
             }
@@ -58,7 +58,7 @@ public class SelfAnalyzingGrid {
         return new SelfAnalyzingGrid(grid.clone(), copy(possibilities));
     }
 
-    private Set<Coordinates> emptyCells() {
+    private Set<Cell> emptyCells() {
         return possibilities.keySet();
     }
 
@@ -68,8 +68,8 @@ public class SelfAnalyzingGrid {
 
     private void copySolutionFrom(Grid solved) {
         try {
-            for (Coordinates coords : emptyCells()) {
-                grid.set(coords, solved.get(coords).get());
+            for (Cell coords : emptyCells()) {
+                grid.set(coords, solved.digit(coords).get());
             }
         } catch (NoSuchElementException e) {
             throw new IllegalArgumentException("The given grid has empty cells");
@@ -84,7 +84,7 @@ public class SelfAnalyzingGrid {
         return emptyCells().size() > 0;
     }
 
-    private Coordinates nextEmptyCell() {
+    private Cell nextEmptyCell() {
         // TODO
         return emptyCells().iterator().next();
     }
@@ -94,19 +94,19 @@ public class SelfAnalyzingGrid {
         return false;
     }
 
-    private void setCell(Coordinates coords, Digit d) {
+    private void setCell(Cell coords, Digit d) {
         // TODO
     }
 
-    private Digit candidateFor(Coordinates coords) {
+    private Digit candidateFor(Cell coords) {
         return possibilities.get(coords).iterator().next();
     }
 
-    private boolean multipleCandidatesExistFor(Coordinates coords) {
+    private boolean multipleCandidatesExistFor(Cell coords) {
         return possibilities.get(coords).size() > 1;
     }
 
-    private void removeCandidate(Coordinates coords, Digit d) {
+    private void removeCandidate(Cell coords, Digit d) {
         // TODO
     }
 
@@ -115,7 +115,7 @@ public class SelfAnalyzingGrid {
             if (!isConsistent()) {
                 return false;
             }
-            Coordinates coords = nextEmptyCell();
+            Cell coords = nextEmptyCell();
             while (multipleCandidatesExistFor(coords)) {
                 Digit d = candidateFor(coords);
                 SelfAnalyzingGrid clone = clone();

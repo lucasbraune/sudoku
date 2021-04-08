@@ -18,23 +18,23 @@ public class AppTest {
     @Test
     public void gridStartsEmpty() {
         Grid grid = new Grid();
-        assertFalse(grid.get(0, 0).isPresent());
+        assertFalse(grid.digit(0, 0).isPresent());
     }
 
     @Test
     public void getAfterSet() {
         Grid grid = new Grid();
         grid.set(0, 0, Digit.ONE);
-        assertEquals(Digit.ONE, grid.get(0, 0).get());
+        assertEquals(Digit.ONE, grid.digit(0, 0).get());
     }
 
     @Test
     public void badGridAccessThrowsException() {
         Grid grid = new Grid();
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(-1, 0); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(9, 0); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(0, -1); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.get(0, 9); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digit(-1, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digit(9, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digit(0, -1); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digit(0, 9); });
     }
 
     @Test
