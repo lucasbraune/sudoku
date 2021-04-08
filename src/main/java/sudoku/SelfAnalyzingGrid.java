@@ -87,28 +87,41 @@ public class SelfAnalyzingGrid {
         candidates.clear();
     }
 
-    private boolean hasEmptyCell() {
+    boolean hasEmptyCell() {
         return emptyCells().size() > 0;
     }
 
-    private Cell nextEmptyCell() {
-        // TODO
-        return emptyCells().iterator().next();
+    Cell nextEmptyCell() {
+        if (!hasEmptyCell()) {
+            throw new NoSuchElementException("The grid is full.");
+        }
+        Cell next = null;
+        int minCandidates = 10;
+        for (Cell cell : candidates.keySet()) {
+            int numberOfCandidates = candidates.get(cell).size();
+            if (numberOfCandidates < minCandidates) {
+                next = cell;
+                minCandidates = numberOfCandidates;
+            }
+        }
+        return next;
     }
 
     private boolean isConsistent() {
         return grid.isConsistent();
     }
 
-    private void setCell(Cell coords, Digit d) {
-        // TODO
+    void setCell(Cell cell, Digit d) {
+        grid.set(cell, d);
+        candidates.remove(cell);
+        removeCandidatesFromRowColumnAndBox(cell);
     }
 
-    private Digit candidateFor(Cell coords) {
+    Digit candidateFor(Cell coords) {
         return candidates.get(coords).iterator().next();
     }
 
-    private boolean multipleCandidatesExistFor(Cell coords) {
+    boolean multipleCandidatesExistFor(Cell coords) {
         return candidates.get(coords).size() > 1;
     }
 

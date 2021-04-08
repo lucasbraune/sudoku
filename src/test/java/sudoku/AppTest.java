@@ -3,6 +3,7 @@ package sudoku;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,7 +103,7 @@ public class AppTest {
         return g;
     } 
 
-    private static final String sampleGridToString = 
+    private static final String sampleGridAsString = 
             "003020600\n" +
             "900305001\n" +
             "001806400\n" +
@@ -115,12 +116,12 @@ public class AppTest {
 
     @Test
     public void gridToString() {
-        assertEquals(sampleGridToString, sampleGrid().toString());
+        assertEquals(sampleGridAsString, sampleGrid().toString());
     }
 
     @Test
     public void stringToGrid() throws GridParserException {
-        assertEquals(sampleGrid(), GridParser.parse(sampleGridToString));
+        assertEquals(sampleGrid(), GridParser.parse(sampleGridAsString));
     }
 
     private static void print(Map<Cell, Set<Digit>> candidates) {
@@ -140,7 +141,7 @@ public class AppTest {
 
     @Test
     public void digitNotCandidateInOwnRowColumnOrBox() throws GridParserException {
-        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(GridParser.parse(sampleGridToString));
+        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(sampleGrid());
         Grid grid = sag.getGrid();
         for (Cell emptyCell : grid.emptyCells()) {
             Set<Digit> candidates = sag.getCandidates().get(emptyCell);
@@ -158,6 +159,24 @@ public class AppTest {
             }
         }
         // print(sag.getCandidates());
+    }
+
+    @Test
+    public void detectCellWithUniqueCandidate() throws GridParserException {
+        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(sampleGrid());
+        for (int i=0; i<49; i++) {
+            Cell cell = sag.nextEmptyCell();
+            assertFalse(sag.multipleCandidatesExistFor(cell));
+            sag.setCell(cell, sag.candidateFor(cell));
+        }
+        // print(sag.getCandidates());
+        assertTrue(sag.getGrid().isSolved());
+    }
+
+    @Test
+    public void solveFirstPuzzle() throws GridParserException {
+        Grid grid = GridParser.parse(sampleGridAsString);
+        assertTrue(App.solve(grid));
     }
 
 }

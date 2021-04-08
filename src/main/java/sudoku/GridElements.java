@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @EqualsAndHashCode
 public class GridElements {
@@ -229,7 +228,9 @@ public class GridElements {
 
             @Override
             public Box next() {
-                return Box.of(3 * (i / 3), 3 * (i % 3));
+                Box next = Box.of(3 * (i / 3), 3 * (i % 3));
+                ++i;
+                return next;
             }  
         };
     }
