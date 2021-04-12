@@ -13,7 +13,7 @@ import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
-import util.Util;
+import sudoku.Util;
 
 /**
  * A 9 x 9 sudoku grid.

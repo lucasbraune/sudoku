@@ -1,4 +1,4 @@
-package util;
+package sudoku;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -18,7 +18,8 @@ public class Util {
         return StreamSupport.stream(iterable.spliterator(), /* parallel? */ false);
     }
 
-    public static <T> Iterable<T> filter(Iterable<? extends T> iterable, Predicate<? super T> predicate) {
+    public static <T> Iterable<T> filter(Iterable<? extends T> iterable,
+            Predicate<? super T> predicate) {
         return () -> new Iterator<T>() {
 
             Optional<T> nextOpt = Optional.empty();
@@ -26,7 +27,8 @@ public class Util {
 
             @Override
             public boolean hasNext() {
-                if (nextOpt.isPresent()) return true;
+                if (nextOpt.isPresent())
+                    return true;
                 while (it.hasNext()) {
                     T candidate = it.next();
                     if (predicate.test(candidate)) {
@@ -47,7 +49,8 @@ public class Util {
         };
     }
 
-    private static <T> List<Iterator<? extends T>> getIterators(List<Iterable<? extends T>> iterables) {
+    private static <T> List<Iterator<? extends T>> getIterators(
+            List<Iterable<? extends T>> iterables) {
         List<Iterator<? extends T>> iterators = new ArrayList<>();
         for (Iterable<? extends T> iterable : iterables) {
             iterators.add(iterable.iterator());
@@ -85,15 +88,15 @@ public class Util {
     }
 
     /**
-     * Returns a deep copy of a map whose values are set of objets of an enumeration
-     * class.
+     * Returns a deep copy of a map whose values are set of objets of an enumeration class.
      */
-    public static <K, E extends Enum<E>> Map<K, Set<E>> copy(Map<? extends K, ? extends Set<E>> map) {
+    public static <K, E extends Enum<E>> Map<K, Set<E>> copy(
+            Map<? extends K, ? extends Set<E>> map) {
         Map<K, Set<E>> copy = new HashMap<>();
         for (K key : map.keySet()) {
             copy.put(key, EnumSet.copyOf(map.get(key)));
         }
         return copy;
     }
-    
+
 }

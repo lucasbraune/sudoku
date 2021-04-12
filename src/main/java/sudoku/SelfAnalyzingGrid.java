@@ -12,7 +12,7 @@ import sudoku.GridElements.Row;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Box;
 import sudoku.Grid.Digit;
-import util.Util;
+import sudoku.Util;
 
 public class SelfAnalyzingGrid {
     @Getter
