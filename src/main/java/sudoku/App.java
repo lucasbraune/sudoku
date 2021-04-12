@@ -6,7 +6,7 @@ package sudoku;
  */
 public class App 
 {
-    public static boolean solve(Grid grid) {
+    public static boolean solve(UnmodifiableGrid grid) {
         return new SelfAnalyzingGrid(grid).solve();
     }
 

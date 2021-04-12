@@ -14,6 +14,7 @@ import sudoku.GridElements.Box;
 import sudoku.GridElements.Digit;
 
 public class SelfAnalyzingGrid {
+
     @Getter
     private final Grid grid;
 
@@ -25,7 +26,7 @@ public class SelfAnalyzingGrid {
         this.candidates = candidates;
     }
 
-    private static Map<Cell, Set<Digit>> allCandidates(Grid grid) {
+    private static Map<Cell, Set<Digit>> allCandidates(UnmodifiableGrid grid) {
         Map<Cell, Set<Digit>> all = new HashMap<>();
         for (Cell cell : grid.emptyCells()) {
             all.put(cell, EnumSet.allOf(Digit.class));
@@ -37,7 +38,7 @@ public class SelfAnalyzingGrid {
      * @throws NoSuchElementException if the cell is empty.
      */
     private void removeCandidatesFromRowColumnAndBox(Cell nonEmptyCell) {
-        Digit d = grid.digit(nonEmptyCell).get();
+        Digit d = grid.digitAt(nonEmptyCell).get();
         for (Cell cell : grid.emptyCells(Row.of(nonEmptyCell))) {
             candidates.get(cell).remove(d);
         }
@@ -49,8 +50,8 @@ public class SelfAnalyzingGrid {
         }
     }
 
-    public SelfAnalyzingGrid(Grid grid) {
-        this(grid, allCandidates(grid));
+    public SelfAnalyzingGrid(UnmodifiableGrid grid) {
+        this(Grid.copyOf(grid), allCandidates(grid));
         for (Cell cell : grid.nonEmptyCells()) {
             removeCandidatesFromRowColumnAndBox(cell);
         }
@@ -61,33 +62,11 @@ public class SelfAnalyzingGrid {
      */
     @Override
     public SelfAnalyzingGrid clone() {
-        return new SelfAnalyzingGrid(grid.clone(), Util.copy(candidates));
-    }
-
-    private Set<Cell> emptyCells() {
-        return candidates.keySet();
-    }
-
-    private void copySolutionFrom(Grid solved) {
-        try {
-            for (Cell coords : emptyCells()) {
-                grid.set(coords, solved.digit(coords).get());
-            }
-        } catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("The given grid has empty cells");
-        }
-        if (!grid.isSolved()) {
-            throw new IllegalArgumentException("The given grid is not a solution of this grid.");
-        }
-        candidates.clear();
-    }
-
-    boolean hasEmptyCell() {
-        return emptyCells().size() > 0;
+        return new SelfAnalyzingGrid(Grid.copyOf(grid), Util.copy(candidates));
     }
 
     Cell nextEmptyCell() {
-        if (!hasEmptyCell()) {
+        if (!grid.hasEmptyCell()) {
             throw new NoSuchElementException("The grid is full.");
         }
         Cell next = null;
@@ -102,20 +81,8 @@ public class SelfAnalyzingGrid {
         return next;
     }
 
-    private boolean isConsistent() {
-        if (!grid.isConsistent()) {
-            return false;
-        }
-        for (Cell cell : emptyCells()) {
-            if (candidates.get(cell).size() == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     void setCell(Cell cell, Digit d) {
-        grid.set(cell, d);
+        grid.setDigit(cell, d);
         candidates.remove(cell);
         removeCandidatesFromRowColumnAndBox(cell);
     }
@@ -132,9 +99,18 @@ public class SelfAnalyzingGrid {
         candidates.get(coords).remove(d);
     }
 
+    private boolean ranOutOfCandidates() {
+        for (Cell cell : candidates.keySet()) {
+            if (candidates.get(cell).size() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean solve() {
-        while (hasEmptyCell()) {
-            if (!isConsistent()) {
+        while (grid.hasEmptyCell()) {
+            if (!grid.isConsistent() || ranOutOfCandidates()) {
                 return false;
             }
             Cell coords = nextEmptyCell();
@@ -144,14 +120,14 @@ public class SelfAnalyzingGrid {
                 clone.setCell(coords, d);
                 boolean solved = clone.solve();
                 if (solved) {
-                    copySolutionFrom(clone.getGrid());
+                    Grid.copy(clone.grid, grid);
                     return true;
                 }
                 removeCandidate(coords, d);
             }
             setCell(coords, candidateFor(coords));
         }
-        return isConsistent();
+        return grid.isConsistent();
     }
 
 }

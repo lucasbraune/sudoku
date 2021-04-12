@@ -16,6 +16,9 @@ public class GridElements {
             return ordinal() + 1;
         }
 
+        /**
+         * @throws IllegalArgumentException if d < 1 or d > 9
+         */
         public static Digit fromInt(int d) {
             if (d < 1 || d > 9) {
                 throw new IllegalArgumentException("Not a nonzero digit: " + d);
@@ -27,6 +30,9 @@ public class GridElements {
             return Character.forDigit(toInt(), 10);
         }        
 
+        /**
+         * @throws IllegalArgumentException if d < '1' or d > '9'
+         */
         public static Digit fromChar(char c) {
             if (c < '1' || c > '9') {
                 throw new IllegalArgumentException("Not a nonzero digit: " + c);
