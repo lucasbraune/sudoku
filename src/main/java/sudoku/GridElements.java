@@ -10,18 +10,29 @@ public class GridElements {
 
     public static enum Digit {
 
-        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9);
+        ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE;
 
-        private final int intValue;
-
-        private Digit(int d) {
-            intValue = d;
+        public int toInt() {
+            return ordinal() + 1;
         }
 
-        public int intValue() {
-            return intValue;
+        public static Digit fromInt(int d) {
+            if (d < 1 || d > 9) {
+                throw new IllegalArgumentException("Not a nonzero digit: " + d);
+            }
+            return values()[d-1];
         }
-        
+
+        public char toChar() {
+            return Character.forDigit(toInt(), 10);
+        }        
+
+        public static Digit fromChar(char c) {
+            if (c < '1' || c > '9') {
+                throw new IllegalArgumentException("Not a nonzero digit: " + c);
+            }
+            return fromInt(Character.digit(c, 10));
+        }
     }
 
     public static void checkRowIndex(int row) {

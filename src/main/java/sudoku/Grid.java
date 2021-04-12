@@ -109,7 +109,7 @@ public class Grid {
     }
 
     public static char charFrom(Optional<Digit> d) {
-        return d.isPresent() ? Integer.toString(d.get().intValue()).charAt(0) : '0';
+        return d.isPresent() ? Integer.toString(d.get().toInt()).charAt(0) : '0';
     }
 
     /**

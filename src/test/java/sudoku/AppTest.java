@@ -35,6 +35,15 @@ import sudoku.GridParser.GridParserException;
 public class AppTest {
 
     @Test
+    public void digitConversions() {
+        Digit seven = Digit.SEVEN;
+        assertTrue(seven.toInt() == 7);
+        assertTrue(seven.equals(Digit.fromInt(7)));
+        assertTrue(seven.toChar() == '7');
+        assertTrue(seven.equals(Digit.fromChar('7')));
+    }
+
+    @Test
     public void gridStartsEmpty() {
         Grid grid = new Grid();
         assertFalse(grid.digit(0, 0).isPresent());
@@ -140,7 +149,7 @@ public class AppTest {
         for (Cell cell : emptyCells) {
             sb.append(cell + ": ");
             for (Digit d : candidates.get(cell)) {
-                sb.append(d.intValue() + ", ");
+                sb.append(d.toInt() + ", ");
             }
             sb.append("\n");
         }
@@ -155,15 +164,15 @@ public class AppTest {
             Set<Digit> candidates = sag.getCandidates().get(emptyCell);
             for (Cell cell : grid.nonEmptyCells(Row.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
-                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+                assertFalse(candidates.contains(d), d.toInt() + " is a candidate for cell " + cell);
             }
             for (Cell cell : grid.nonEmptyCells(Column.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
-                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+                assertFalse(candidates.contains(d), d.toInt() + " is a candidate for cell " + cell);
             }
             for (Cell cell : grid.nonEmptyCells(Box.of(emptyCell))) {
                 Digit d = grid.digit(cell).get();
-                assertFalse(candidates.contains(d), d.intValue() + " is a candidate for cell " + cell);
+                assertFalse(candidates.contains(d), d.toInt() + " is a candidate for cell " + cell);
             }
         }
         // print(sag.getCandidates());
