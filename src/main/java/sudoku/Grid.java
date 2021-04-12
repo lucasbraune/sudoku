@@ -12,30 +12,14 @@ import lombok.Getter;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
+import sudoku.GridElements.Digit;
 import sudoku.GridElements.Row;
-import sudoku.Util;
 
 /**
  * A 9 x 9 sudoku grid.
  */
 @EqualsAndHashCode
 public class Grid {
-
-    public static enum Digit {
-
-        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9);
-
-        private final int intValue;
-
-        private Digit(int d) {
-            intValue = d;
-        }
-
-        public int intValue() {
-            return intValue;
-        }
-        
-    }
 
     private final List<Optional<Digit>> data;
 

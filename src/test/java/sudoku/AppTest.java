@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import sudoku.Grid.Digit;
+import sudoku.GridElements.Digit;
 import sudoku.Grid.GridOverwriteException;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;

@@ -2,7 +2,7 @@ package sudoku;
 
 import java.util.Optional;
 
-import sudoku.Grid.Digit;
+import sudoku.GridElements.Digit;
 
 public class GridParser {
 

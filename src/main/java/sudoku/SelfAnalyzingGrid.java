@@ -11,8 +11,7 @@ import sudoku.GridElements.Cell;
 import sudoku.GridElements.Row;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Box;
-import sudoku.Grid.Digit;
-import sudoku.Util;
+import sudoku.GridElements.Digit;
 
 public class SelfAnalyzingGrid {
     @Getter

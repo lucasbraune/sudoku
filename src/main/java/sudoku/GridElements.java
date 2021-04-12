@@ -8,6 +8,22 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class GridElements {
 
+    public static enum Digit {
+
+        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9);
+
+        private final int intValue;
+
+        private Digit(int d) {
+            intValue = d;
+        }
+
+        public int intValue() {
+            return intValue;
+        }
+        
+    }
+
     public static void checkRowIndex(int row) {
         if (row < 0 || row >= 9) {
             throw new IndexOutOfBoundsException("Bad row index: " + row);
