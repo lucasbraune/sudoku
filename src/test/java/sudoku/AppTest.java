@@ -126,7 +126,7 @@ public class AppTest {
 
     @Test
     public void solveFirstPuzzle() throws GridParserException {
-        assertTrue(App.solve(sampleGrid()).isPresent());
+        assertTrue(Solver.solve(sampleGrid()).isPresent());
     }
 
     private static String readLines(BufferedReader br, int n) throws IOException {
@@ -167,7 +167,7 @@ public class AppTest {
     @MethodSource("readGrids")
     @Timeout(value = 1, unit = TimeUnit.SECONDS)
     public void canSolveSampleGrid(UnmodifiableGrid grid) {
-        assertTrue(App.solve(grid).isPresent());
+        assertTrue(Solver.solve(grid).isPresent());
     }
 
 }

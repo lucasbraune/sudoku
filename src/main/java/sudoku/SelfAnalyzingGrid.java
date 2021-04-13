@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import sudoku.GridElements.Cell;
@@ -82,15 +81,6 @@ public final class SelfAnalyzingGrid extends Grid {
         return candidates.keySet().size() > 0;
     }
 
-    private Cell cellWithFewestCandidates() {
-        try {
-            return Collections.min(emptyCells(),
-                    Comparator.comparingInt(cell -> candidates(cell).size()));
-        } catch (NullPointerException e) {
-            throw new NoSuchElementException("The grid is full.");
-        }
-    }
-
     /**
      * @throws NoSuchElementException if the specified cell is not empty
      */
@@ -100,47 +90,6 @@ public final class SelfAnalyzingGrid extends Grid {
         } else {
             throw new NoSuchElementException("The given cell is not empty");
         }
-    }
-
-    private Digit candidateFor(Cell cell) {
-        return candidates(cell).iterator().next();
-    }
-
-    private boolean multipleCandidatesExistFor(Cell coords) {
-        return candidates(coords).size() > 1;
-    }
-
-    private boolean ranOutOfCandidates() {
-        for (Cell cell : emptyCells()) {
-            if (candidates(cell).size() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns a solution to this grid, if one exists.
-     */
-    public Optional<UnmodifiableGrid> solve() {
-        while (hasEmptyCell()) {
-            if (!isConsistent() || ranOutOfCandidates()) {
-                return Optional.empty();
-            }
-            Cell cell = cellWithFewestCandidates();
-            while (multipleCandidatesExistFor(cell)) {
-                Digit d = candidateFor(cell);
-                SelfAnalyzingGrid clone = new SelfAnalyzingGrid(this);
-                clone.setDigit(cell, d);
-                Optional<UnmodifiableGrid> solved = clone.solve();
-                if (solved.isPresent()) {
-                    return solved;
-                }
-                ruleOut(d, cell);
-            }
-            setDigit(cell, candidateFor(cell));
-        }
-        return isConsistent() ? Optional.of(new UnmodifiableGrid(this)) : Optional.empty();
     }
 
     public final String candidatesToString() {
