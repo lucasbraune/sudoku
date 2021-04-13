@@ -9,6 +9,12 @@ import sudoku.GridElements.Digit;
 
 public class Solver {
 
+    /**
+     * Returns a solution to the given Sudoku grid, if one exists.
+     * 
+     * This method offers correctness, but not a performance guarantee. On my machine, all 50
+     * puzzles from Project Euler's Problem 96 can be solved in well under one second.
+     */
     public static Optional<UnmodifiableGrid> solve(UnmodifiableGrid grid) {
         return solve(SelfAnalyzingGrid.fromOrdinaryGrid(grid));
     }

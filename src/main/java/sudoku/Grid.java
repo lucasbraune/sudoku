@@ -4,12 +4,17 @@ import java.util.Optional;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Digit;
 
+/**
+ * A modifiable Sudoku grid.
+ */
 public class Grid extends UnmodifiableGrid {
 
+    /** Creates new grid, all of whose cells are blank. */
     public Grid() {
         super();
     }
 
+    /** Creates a deep copy of the specified grid. */
     public Grid(UnmodifiableGrid grid) {
         super(grid);
     }
@@ -69,6 +74,13 @@ public class Grid extends UnmodifiableGrid {
         }
     }
 
+    /**
+     * Returns an UnmodifiableGrid whose string representation (obtained from the
+     * {@code Object.toString()} method) is the given string.
+     * 
+     * @throws GridParserException if the given string has length different from 81 or contains a
+     *                             character that is not a (radix 10) digit
+     */
     public static Grid fromString(String str) throws GridParserException {
         Grid result = new Grid();
         copy(UnmodifiableGrid.fromString(str), result);

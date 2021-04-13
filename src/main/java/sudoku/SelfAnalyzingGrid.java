@@ -16,11 +16,25 @@ import sudoku.GridElements.Column;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Digit;
 
+/**
+ * A grid with a set of digits associated to each of its empty cells. The set contains the candidate
+ * values for that cell.
+ * 
+ * When a bank cell is set to a digit, that digit is ruled out as a cadidate in the blank cell's
+ * row, column and box. Users of this class can also manually rule out a digit as a candidate for a
+ * given cell, using its public {@code ruleOut} methods.
+ * 
+ * This class overrides the {@code equals()} and {@code hashCode()} methods of its super class,
+ * while preserving their contracts. An instance of {@code SelfAnalyzingGrid} can only be equal to
+ * other instances of {@code SelfAnalyzingGrid}. Two instances of this class are equal if, and only
+ * if, their underlying grids and sets of candidates are equal.
+ */
 @EqualsAndHashCode(callSuper = true)
 public final class SelfAnalyzingGrid extends Grid {
 
     private final Map<Cell, Set<Digit>> candidates;
 
+    /** Creates an empty grid with all digits as candidates for all of its cells. */
     public SelfAnalyzingGrid() {
         super();
         candidates = new HashMap<>();
@@ -29,22 +43,32 @@ public final class SelfAnalyzingGrid extends Grid {
         }
     }
 
+    /**
+     * Creates a deep copy of the specified {@code SelfAnalyzingGrid}. Both the underlying grid and
+     * candidate sets are copied.
+     */
     public SelfAnalyzingGrid(SelfAnalyzingGrid grid) {
         super(grid);
         candidates = Util.copy(grid.candidates);
     }
 
     /**
-     * @throws NoSuchElementException if the specified cell is not empty
+     * Removes the specified digit from the set of candidates for the specified cell.
+     * 
+     * @throws NoSuchElementException if the specified cell is not blank.
      */
     public void ruleOut(Digit d, Cell cell) {
         try {
             candidates.get(cell).remove(d);
         } catch (NullPointerException npe) {
             throw new NoSuchElementException("The given cell is not empty");
-        }        
+        }
     }
 
+    /**
+     * Rules out the specified digit as a candidate for the empty cells in the given range
+     * (typically a row, column or box).
+     */
     public void ruleOut(Digit d, Iterable<Cell> cells) {
         for (Cell cell : emptyCells(cells)) {
             ruleOut(d, cell);
@@ -52,7 +76,8 @@ public final class SelfAnalyzingGrid extends Grid {
     }
 
     /**
-     * Sets the digit at the cell with the specified coordinates.
+     * Sets the digit at specified empty cell. Rules out that digit as a candidate for the empty
+     * cells in the given cell's row, column and box.
      * 
      * @throws GridOverwriteException if the cell is not blank
      */
@@ -65,6 +90,12 @@ public final class SelfAnalyzingGrid extends Grid {
         ruleOut(d, Box.of(cell));
     }
 
+    /**
+     * Creates a self analyzing grid (SAG) from an ordinary grid. The SAG's underlying grid is a
+     * deep copy of the specified grid. The candidate sets are created as if by setting all digits
+     * as candidates for each empty cell, then ruling out the value of each nonempty cell as a
+     * candidate along the nonempty cell's row, column and box.
+     */
     public static SelfAnalyzingGrid fromOrdinaryGrid(UnmodifiableGrid grid) {
         SelfAnalyzingGrid sag = new SelfAnalyzingGrid();
         Grid.copy(grid, sag); // Calls the overriden method setDigit(Cell, Digit)
@@ -82,6 +113,12 @@ public final class SelfAnalyzingGrid extends Grid {
     }
 
     /**
+     * 
+     * Returns a set of candidates for value of the specified cell in a solution of this grid.
+     * This set is guaranteed to contain the value of this cell in every solution of this grid
+     * if the user of this grid never calls its {@code ruleOut} method manually (as opposed to
+     * automatically, when setting the value of a cell).
+     * 
      * @throws NoSuchElementException if the specified cell is not empty
      */
     public Set<Digit> candidates(Cell emptyCell) {
@@ -92,6 +129,11 @@ public final class SelfAnalyzingGrid extends Grid {
         }
     }
 
+    /** 
+     * Returns a string with one line for each empty cell. The lines are ordered according to the
+     * number of candidates for the corresponding cell; fewer candidates come first. Each line 
+     * contains the coordinates of its cell followed by its set of candidates.
+     */
     public final String candidatesToString() {
         List<Cell> cells = new ArrayList<>(emptyCells());
         cells.sort(Comparator.comparingInt(cell -> candidates(cell).size()));

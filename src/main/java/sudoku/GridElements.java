@@ -5,6 +5,11 @@ import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/**
+ * Contains static classes representing the elements of a Sudoku grid, namely digits, cells, rows,
+ * columns, and boxes. The classes representing the last three implement {@code Iterable<Cell>}.
+ * This class also exposes methods for iterating over the cells, rows, columns and boxes of a grid.
+ */
 @EqualsAndHashCode
 public class GridElements {
 
@@ -23,12 +28,12 @@ public class GridElements {
             if (d < 1 || d > 9) {
                 throw new IllegalArgumentException("Not a nonzero digit: " + d);
             }
-            return values()[d-1];
+            return values()[d - 1];
         }
 
         public char toChar() {
             return Character.forDigit(toInt(), 10);
-        }        
+        }
 
         /**
          * @throws IllegalArgumentException if d < '1' or d > '9'
@@ -91,7 +96,7 @@ public class GridElements {
         private final int index;
 
         private Row(int index) {
-            this.index = index; 
+            this.index = index;
         }
 
         public static Row of(int index) {
@@ -107,15 +112,15 @@ public class GridElements {
         public Iterator<Cell> iterator() {
             return new Iterator<Cell>() {
                 private int i = 0; // Loop variable
-    
+
                 @Override
                 public boolean hasNext() {
-                    return i < 9; 
+                    return i < 9;
                 }
-    
+
                 @Override
                 public Cell next() {
-                    return Cell.of(index, i++); 
+                    return Cell.of(index, i++);
                 }
             };
         }
@@ -129,7 +134,7 @@ public class GridElements {
         private final int index;
 
         private Column(int index) {
-            this.index = index; 
+            this.index = index;
         }
 
         public static Column of(int index) {
@@ -145,16 +150,16 @@ public class GridElements {
         public Iterator<Cell> iterator() {
             return new Iterator<Cell>() {
                 private int i = 0; // Loop variable
-    
+
                 @Override
                 public boolean hasNext() {
-                    return i < 9; 
+                    return i < 9;
                 }
-    
+
                 @Override
                 public Cell next() {
-                    return Cell.of(i++, index); 
-                }  
+                    return Cell.of(i++, index);
+                }
             };
         }
 
@@ -185,11 +190,11 @@ public class GridElements {
         public Iterator<Cell> iterator() {
             return new Iterator<Cell>() {
                 private int i = 0; // Loop variable
-    
+
                 public boolean hasNext() {
                     return i < 9;
                 }
-    
+
                 public Cell next() {
                     Cell cell = Cell.of(corner.getRow() + i / 3, corner.getColumn() + i % 3);
                     ++i;
@@ -214,7 +219,7 @@ public class GridElements {
                 Cell cell = Cell.of(i / 9, i % 9);
                 ++i;
                 return cell;
-            }  
+            }
         };
     }
 
@@ -264,8 +269,8 @@ public class GridElements {
                 Box next = Box.of(3 * (i / 3), 3 * (i % 3));
                 ++i;
                 return next;
-            }  
+            }
         };
     }
-    
+
 }

@@ -14,17 +14,32 @@ import sudoku.GridElements.Digit;
 import sudoku.GridElements.Row;
 
 /**
- * An unmodifiable 9 x 9 sudoku grid.
+ * An unmodifiable 9 x 9 Sudoku grid.
+ * 
+ * Instances of this class can be created with the {@code fromString} factory method and with this
+ * classes unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
+ * Alternatively, instances can be created using the constructors and factory methods of the
+ * subclasses {@code Grid} and {@SelfAnalyzingGrid}.
+ * 
+ * This class exposes methods for traversing over the empty or nonempty cells of a grid or one of
+ * its rows, columns or boxes. It also exposes methods that check whether a grid is consistent and
+ * whether it is solved.
  */
 @EqualsAndHashCode
 public class UnmodifiableGrid {
 
     private final List<Optional<Digit>> data;
 
+    /**
+     * Constructs a deep of the specified grid.
+     */
     public UnmodifiableGrid(UnmodifiableGrid grid) {
         data = new ArrayList<>(grid.data);
     }
 
+    /**
+     * Constructs unmodifiable grid all of whose cells are blank;
+     */
     protected UnmodifiableGrid() {
         data = new ArrayList<>();
         for (int i = 0; i < 81; i++) {
@@ -57,14 +72,14 @@ public class UnmodifiableGrid {
     }
 
     /**
-     * Sets the digit at the cell with the specified coordinates.
+     * Sets the optional digit at the cell with the specified coordinates.
      */
     protected final void setOptionalDigit(Cell cell, Optional<Digit> d) {
         data.set(arrayIndex(cell), d);
     }
 
     /**
-     * Sets the digit at the cell with the specified coordinates.
+     * Sets the optional digit at the cell with the specified coordinates.
      * 
      * @throws IndexOutOfBoundsException if either cell coordinate is < 0 or >= 9
      */
@@ -97,7 +112,7 @@ public class UnmodifiableGrid {
     }
 
     public static final class GridParserException extends Exception {
-        
+
         public GridParserException(String message) {
             super(message);
         }
@@ -108,17 +123,27 @@ public class UnmodifiableGrid {
         private static final long serialVersionUID = -5219699469780289049L;
     }
 
+    /**
+     * @throws IllegalArgumentException if the given character is not a (radix 10) digit
+     */
     private static Optional<Digit> optionalDigitFrom(char c) {
         return c == '0' ? Optional.empty() : Optional.of(Digit.fromChar(c));
     }
 
+    /**
+     * Returns an UnmodifiableGrid whose string representation (obtained from the
+     * {@code Object.toString()} method) is the given string.
+     * 
+     * @throws GridParserException if the given string has length different from 81 or contains a
+     *                             character that is not a (radix 10) digit
+     */
     public static UnmodifiableGrid fromString(String str) throws GridParserException {
         if (str.length() != 81) {
             throw new GridParserException("String of incorrect size: " + str.length());
         }
         UnmodifiableGrid grid = new UnmodifiableGrid();
-        for (int row=0; row<9; row++) {
-            for (int column=0; column<9; column++) {
+        for (int row = 0; row < 9; row++) {
+            for (int column = 0; column < 9; column++) {
                 int index = row * 9 + column;
                 try {
                     Optional<Digit> d = optionalDigitFrom(str.charAt(index));
@@ -131,18 +156,28 @@ public class UnmodifiableGrid {
         return grid;
     }
 
+    /**
+     * Returns the empty cells in the given range of cells (typically a row, a column, a box, or the
+     * whole grid).
+     */
     public Iterable<Cell> emptyCells(Iterable<Cell> cells) {
         return Util.filter(cells, cell -> !digitAt(cell).isPresent());
     }
 
+    /**
+     * Returns the nonempty cells in the given range of cells (typically a row, a column, a box, or
+     * the whole grid).
+     */
     public Iterable<Cell> nonEmptyCells(Iterable<Cell> cells) {
         return Util.filter(cells, cell -> digitAt(cell).isPresent());
     }
 
+    /** Returns the empty cells in this grid */
     public Iterable<Cell> emptyCells() {
         return emptyCells(GridElements.allCells());
     }
 
+    /** Returns the nonempty cells in this grid */
     public Iterable<Cell> nonEmptyCells() {
         return nonEmptyCells(GridElements.allCells());
     }
@@ -151,6 +186,10 @@ public class UnmodifiableGrid {
         return emptyCells().iterator().hasNext();
     }
 
+    /**
+     * Returns true if, and only if, the values in the nonempty cells within the specified range
+     * (typically a row, column or box) are all distinct.
+     */
     public final boolean isConsistent(Iterable<Cell> rowColumnOrBox) {
         Set<Digit> seen = EnumSet.noneOf(Digit.class);
         for (Cell cell : nonEmptyCells(rowColumnOrBox)) {
@@ -163,6 +202,11 @@ public class UnmodifiableGrid {
         return true;
     }
 
+    /**
+     * Returns true if, and only if, for each row, column or box, the values of the nonempty cells
+     * in the row, column, and box are distinct. This method does not determine whether this grid is
+     * solvable.
+     */
     public final boolean isConsistent() {
         for (Row row : GridElements.allRows()) {
             if (!isConsistent(row))
@@ -179,6 +223,9 @@ public class UnmodifiableGrid {
         return true;
     }
 
+    /**
+     * Determines whether this Sudoku grid is solved.
+     */
     public final boolean isSolved() {
         return !hasEmptyCell() && isConsistent();
     }

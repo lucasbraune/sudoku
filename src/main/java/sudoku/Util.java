@@ -10,12 +10,16 @@ import java.util.function.Predicate;
 
 public class Util {
 
-    public static <T> Iterable<T> filter(Iterable<? extends T> iterable,
+    /**
+     * Filters the given range, keeping its elements for which the specified predicate is true, and
+     * removing the rest.
+     */
+    public static <T> Iterable<T> filter(Iterable<? extends T> range,
             Predicate<? super T> predicate) {
         return () -> new Iterator<T>() {
 
             Optional<T> nextOpt = Optional.empty();
-            Iterator<? extends T> it = iterable.iterator();
+            Iterator<? extends T> it = range.iterator();
 
             @Override
             public boolean hasNext() {
