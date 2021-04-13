@@ -21,6 +21,19 @@ public final class SelfAnalyzingGrid extends Grid {
 
     private final Map<Cell, Set<Digit>> candidates;
 
+    public SelfAnalyzingGrid() {
+        super();
+        candidates = new HashMap<>();
+        for (Cell cell : GridElements.allCells()) {
+            candidates.put(cell, EnumSet.allOf(Digit.class));
+        }
+    }
+
+    public SelfAnalyzingGrid(SelfAnalyzingGrid grid) {
+        super(grid);
+        candidates = Util.copy(grid.candidates);
+    }
+
     /**
      * @throws NoSuchElementException if the specified cell is not empty
      */
@@ -36,19 +49,6 @@ public final class SelfAnalyzingGrid extends Grid {
         for (Cell cell : emptyCells(cells)) {
             ruleOut(d, cell);
         }
-    }
-
-    public SelfAnalyzingGrid() {
-        super();
-        candidates = new HashMap<>();
-        for (Cell cell : GridElements.allCells()) {
-            candidates.put(cell, EnumSet.allOf(Digit.class));
-        }
-    }
-
-    public SelfAnalyzingGrid(SelfAnalyzingGrid grid) {
-        super(grid);
-        candidates = Util.copy(grid.candidates);
     }
 
     /**
@@ -97,9 +97,7 @@ public final class SelfAnalyzingGrid extends Grid {
         cells.sort(Comparator.comparingInt(cell -> candidates(cell).size()));
         StringBuilder sb = new StringBuilder();
         for (Cell cell : cells) {
-            sb.append(cell + ": ");
-            sb.append(candidates(cell));
-            sb.append("\n");
+            sb.append(cell + ": " + candidates(cell) + "\n");
         }
         return sb.toString();
     }

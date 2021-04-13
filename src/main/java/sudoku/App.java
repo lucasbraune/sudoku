@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import sudoku.UnmodifiableGrid.GridParserException;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     private static String readLines(BufferedReader br, int n) throws IOException {
