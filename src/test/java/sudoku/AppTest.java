@@ -4,11 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -129,42 +125,20 @@ public class AppTest {
         assertTrue(Solver.solve(sampleGrid()).isPresent());
     }
 
-    private static String readLines(BufferedReader br, int n) throws IOException {
-        if (n < 0) throw new IllegalArgumentException("The number of lines given is negative (" + n + ")");
-        StringBuilder sb = new StringBuilder();
-        for (int i=0; i<n; i++) {
-            sb.append(br.readLine());
-        }
-        return sb.toString();
-    }
-
-    private static List<UnmodifiableGrid> readGrids() throws IOException, GridParserException {
-        List<UnmodifiableGrid> grids = new ArrayList<>();
-        File file = new File("src/test/resources/puzzles.txt");
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            for (int i=0; i<50; i++) {
-                br.readLine();
-                UnmodifiableGrid grid = UnmodifiableGrid.fromString(readLines(br, 9));
-                grids.add(grid);
-            }
-        }
-        return grids;
-    }
-
     @Test
     public void canReadGrids() throws IOException, GridParserException {
-        List<UnmodifiableGrid> grids = readGrids();
+        List<UnmodifiableGrid> grids = App.readGrids();
         assertTrue(grids.size() == 50);
     }
 
     @ParameterizedTest
-    @MethodSource("readGrids")
+    @MethodSource("sudoku.App#readGrids")
     public void sampleGridIsConsistent(UnmodifiableGrid grid) {
         assertTrue(grid.isConsistent());
     }
 
     @ParameterizedTest
-    @MethodSource("readGrids")
+    @MethodSource("sudoku.App#readGrids")
     @Timeout(value = 1, unit = TimeUnit.SECONDS)
     public void canSolveSampleGrid(UnmodifiableGrid grid) {
         assertTrue(Solver.solve(grid).isPresent());
