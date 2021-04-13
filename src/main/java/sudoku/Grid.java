@@ -6,6 +6,14 @@ import sudoku.GridElements.Digit;
 
 public class Grid extends UnmodifiableGrid {
 
+    public Grid() {
+        super();
+    }
+
+    public Grid(UnmodifiableGrid grid) {
+        super(grid);
+    }
+
     public static class GridOverwriteException extends RuntimeException {
 
         public GridOverwriteException(Cell cell) {
@@ -46,6 +54,7 @@ public class Grid extends UnmodifiableGrid {
      * 
      * @throws GridOverwriteException if the target grid has a nonempty cell that is either not set
      *                                or set to a different value on the source grid
+     * @implNote this method is implemented in terms of the nonfinal method {@code setDigit(Cell, Digit)}
      */
     public static void copy(UnmodifiableGrid source, Grid target) {
         for (Cell cell : GridElements.allCells()) {
@@ -58,12 +67,6 @@ public class Grid extends UnmodifiableGrid {
                 target.setDigit(cell, s.get());
             }
         }
-    }
-
-    public static Grid copyOf(UnmodifiableGrid grid) {
-        Grid result = new Grid();
-        copy(grid, result);
-        return result;
     }
 
     public static Grid fromString(String str) throws GridParserException {

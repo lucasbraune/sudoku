@@ -1,13 +1,15 @@
 package sudoku;
 
+import java.util.Optional;
+
 /**
  * Hello world!
  *
  */
 public class App 
 {
-    public static boolean solve(UnmodifiableGrid grid) {
-        return new SelfAnalyzingGrid(grid).solve();
+    public static Optional<UnmodifiableGrid> solve(UnmodifiableGrid grid) {
+        return SelfAnalyzingGrid.fromOrdinaryGrid(grid).solve();
     }
 
     public static void main( String[] args )

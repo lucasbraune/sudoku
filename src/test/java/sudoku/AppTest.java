@@ -4,28 +4,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import sudoku.GridElements.Digit;
 import sudoku.Grid.GridOverwriteException;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
+import sudoku.GridElements.Digit;
 import sudoku.GridElements.Row;
 import sudoku.UnmodifiableGrid.GridParserException;
 
@@ -46,7 +43,9 @@ public class AppTest {
     @Test
     public void gridStartsEmpty() {
         UnmodifiableGrid grid = new UnmodifiableGrid();
-        assertFalse(grid.digitAt(0, 0).isPresent());
+        for (Cell cell : GridElements.allCells()) {
+            assertFalse(grid.digitAt(cell).isPresent());
+        }
     }
 
     @Test
@@ -87,27 +86,20 @@ public class AppTest {
         assertEquals(sampleGridAsString, sampleGrid().toString());
     }
 
-    private static void print(Map<Cell, Set<Digit>> candidates) {
-        StringBuilder sb = new StringBuilder();
-        List<Cell> emptyCells = new ArrayList<>(candidates.keySet());
-        Collections.sort(emptyCells, (cell1, cell2) -> Integer.compare(
-                candidates.get(cell1).size(), candidates.get(cell2).size()));
-        for (Cell cell : emptyCells) {
-            sb.append(cell + ": ");
-            for (Digit d : candidates.get(cell)) {
-                sb.append(d.toInt() + ", ");
-            }
-            sb.append("\n");
-        }
-        System.out.print(sb.toString());
+    @Test
+    public void emptyCellsOverride() throws GridParserException {
+        UnmodifiableGrid grid = sampleGrid();
+        Set<Cell> emptyCells = new HashSet<>();
+        grid.emptyCells().forEach(emptyCells::add);
+        SelfAnalyzingGrid sag = SelfAnalyzingGrid.fromOrdinaryGrid(grid);
+        assertEquals(emptyCells, sag.emptyCells());
     }
 
-    @Test
-    public void digitNotCandidateInOwnRowColumnOrBox() throws GridParserException {
-        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(sampleGrid());
-        UnmodifiableGrid grid = sag.getGrid();
+    @Test @DisplayName("A value is not a candidate in its cell's row, column and box.")
+    public void noObviouslyWrongCandidates() throws GridParserException {
+        SelfAnalyzingGrid grid = SelfAnalyzingGrid.fromOrdinaryGrid(sampleGrid());
         for (Cell emptyCell : grid.emptyCells()) {
-            Set<Digit> candidates = sag.getCandidates().get(emptyCell);
+            Set<Digit> candidates = grid.candidates(emptyCell);
             for (Cell cell : grid.nonEmptyCells(Row.of(emptyCell))) {
                 Digit d = grid.digitAt(cell).get();
                 assertFalse(candidates.contains(d), d.toInt() + " is a candidate for cell " + cell);
@@ -121,24 +113,20 @@ public class AppTest {
                 assertFalse(candidates.contains(d), d.toInt() + " is a candidate for cell " + cell);
             }
         }
-        // print(sag.getCandidates());
     }
 
     @Test
-    public void detectCellWithUniqueCandidate() throws GridParserException {
-        SelfAnalyzingGrid sag = new SelfAnalyzingGrid(sampleGrid());
-        for (int i=0; i<49; i++) {
-            Cell cell = sag.nextEmptyCell();
-            assertFalse(sag.multipleCandidatesExistFor(cell));
-            sag.setCell(cell, sag.candidateFor(cell));
+    public void hasCandidatesForEveryCell() throws GridParserException {
+        SelfAnalyzingGrid grid = SelfAnalyzingGrid.fromOrdinaryGrid(sampleGrid());
+        assertTrue(grid.emptyCells().contains(Cell.of(0, 0)));
+        for (Cell cell : grid.emptyCells()) {
+            assertTrue(grid.candidates(cell).size() > 0);
         }
-        // print(sag.getCandidates());
-        assertTrue(sag.getGrid().isSolved());
     }
 
     @Test
     public void solveFirstPuzzle() throws GridParserException {
-        assertTrue(App.solve(sampleGrid()));
+        assertTrue(App.solve(sampleGrid()).isPresent());
     }
 
     private static String readLines(BufferedReader br, int n) throws IOException {
@@ -179,7 +167,7 @@ public class AppTest {
     @MethodSource("readGrids")
     @Timeout(value = 1, unit = TimeUnit.SECONDS)
     public void canSolveSampleGrid(UnmodifiableGrid grid) {
-        assertTrue(App.solve(grid));
+        assertTrue(App.solve(grid).isPresent());
     }
 
 }

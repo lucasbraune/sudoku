@@ -5,7 +5,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import lombok.EqualsAndHashCode;
 import sudoku.GridElements.Box;
@@ -22,19 +21,15 @@ public class UnmodifiableGrid {
 
     private final List<Optional<Digit>> data;
 
+    public UnmodifiableGrid(UnmodifiableGrid grid) {
+        data = new ArrayList<>(grid.data);
+    }
+
     protected UnmodifiableGrid() {
         data = new ArrayList<>();
         for (int i = 0; i < 81; i++) {
             data.add(Optional.empty());
         }
-    }
-
-    private UnmodifiableGrid(List<Optional<Digit>> data) {
-        this.data = data;
-    }
-
-    public static UnmodifiableGrid copyOf(UnmodifiableGrid grid) {
-        return new UnmodifiableGrid(new ArrayList<>(grid.data));
     }
 
     private static int arrayIndex(int row, int column) {
@@ -136,27 +131,23 @@ public class UnmodifiableGrid {
         return grid;
     }
 
-    private Predicate<Cell> isEmpty() {
-        return cell -> !digitAt(cell).isPresent();
+    public Iterable<Cell> emptyCells(Iterable<Cell> cells) {
+        return Util.filter(cells, cell -> !digitAt(cell).isPresent());
     }
 
-    public final Iterable<Cell> emptyCells(Iterable<Cell> cells) {
-        return Util.filter(cells, isEmpty());
+    public Iterable<Cell> nonEmptyCells(Iterable<Cell> cells) {
+        return Util.filter(cells, cell -> digitAt(cell).isPresent());
     }
 
-    public final Iterable<Cell> nonEmptyCells(Iterable<Cell> cells) {
-        return Util.filter(cells, isEmpty().negate());
-    }
-
-    public final Iterable<Cell> emptyCells() {
+    public Iterable<Cell> emptyCells() {
         return emptyCells(GridElements.allCells());
     }
 
-    public final Iterable<Cell> nonEmptyCells() {
+    public Iterable<Cell> nonEmptyCells() {
         return nonEmptyCells(GridElements.allCells());
     }
 
-    public final boolean hasEmptyCell() {
+    public boolean hasEmptyCell() {
         return emptyCells().iterator().hasNext();
     }
 
