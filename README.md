@@ -9,9 +9,9 @@ java -jar target/sudoku-1.0-SNAPSHOT.jar
 ```
 This will read sudoku puzzles from the standard input and write their solutions to the standard output.
 
-The 50 puzzles from Project Euler's Problem 96 are contained in the file `src/resources/puzzles`. To solve them, run 
+The 50 puzzles from Project Euler's Problem 96 are contained in the file `src/main/resources/puzzles`. To solve them, run 
 ```
-java -jar target/sudoku-1.0-SNAPSHOT.jar < src/resources/puzzles
+java -jar target/sudoku-1.0-SNAPSHOT.jar < src/main/resources/puzzles
 ```
 
 # Format for input and output
