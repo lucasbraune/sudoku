@@ -25,7 +25,7 @@ public class TestsWithAllPuzzles {
 
     private static List<UnmodifiableGrid> readGridsFromInput() throws IOException {
         List<UnmodifiableGrid> grids = new ArrayList<>();
-        try (BufferedReader input = new BufferedReader(new FileReader(App.inputFile))) {
+        try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/puzzles"))) {
             for (Optional<UnmodifiableGrid> optGrid = App.readGrid(input); optGrid
                     .isPresent(); optGrid = App.readGrid(input)) {
                 grids.add(optGrid.get());

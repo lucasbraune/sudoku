@@ -2,10 +2,9 @@ package sudoku;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +17,9 @@ import sudoku.UnmodifiableGrid.GridParserException;
 
 public class App {
 
-    public static final File inputFile = new File("src/main/input/puzzles");
-    public static final File outputFile = new File("target/output/solutions");
-
     public static void main(String[] args) throws IOException {
-        outputFile.getParentFile().mkdirs();
-        try (BufferedReader input = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter output = new BufferedWriter(new FileWriter(outputFile))) {
+        try (BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                BufferedWriter output = new BufferedWriter(new OutputStreamWriter(System.out))) {
             readGridsAndWriteSolutions(input, output);
         }
     }
