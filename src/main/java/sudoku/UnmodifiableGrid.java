@@ -17,7 +17,7 @@ import sudoku.GridElements.Row;
  * An unmodifiable 9 x 9 Sudoku grid.
  * 
  * Instances of this class can be created with the {@code fromString} factory method and with this
- * classes unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
+ * class' unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
  * Alternatively, instances can be created using the constructors and factory methods of the
  * subclasses {@code Grid} and {@SelfAnalyzingGrid}.
  * 

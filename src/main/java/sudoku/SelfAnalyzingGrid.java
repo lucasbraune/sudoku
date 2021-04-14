@@ -20,7 +20,7 @@ import sudoku.GridElements.Digit;
  * A grid with a set of digits associated to each of its empty cells. The set contains the candidate
  * values for that cell.
  * 
- * When a bank cell is set to a digit, that digit is ruled out as a cadidate in the blank cell's
+ * When a blank cell is set to a digit, that digit is ruled out as a cadidate in the blank cell's
  * row, column and box. Users of this class can also manually rule out a digit as a candidate for a
  * given cell, using its public {@code ruleOut} methods.
  * 
