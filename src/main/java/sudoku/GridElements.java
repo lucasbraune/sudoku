@@ -22,7 +22,7 @@ public class GridElements {
         }
 
         /**
-         * @throws IllegalArgumentException if d < 1 or d > 9
+         * @throws IllegalArgumentException if {@code d < 1} or {@code d > 9}
          */
         public static Digit fromInt(int d) {
             if (d < 1 || d > 9) {
@@ -36,7 +36,7 @@ public class GridElements {
         }
 
         /**
-         * @throws IllegalArgumentException if d < '1' or d > '9'
+         * @throws IllegalArgumentException if {@code d < '1'} or {@code d > '9'}
          */
         public static Digit fromChar(char c) {
             if (c < '1' || c > '9') {

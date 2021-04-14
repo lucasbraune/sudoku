@@ -19,7 +19,7 @@ import sudoku.GridElements.Row;
  * Instances of this class can be created with the {@code fromString} factory method and with this
  * class' unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
  * Alternatively, instances can be created using the constructors and factory methods of the
- * subclasses {@code Grid} and {@SelfAnalyzingGrid}.
+ * subclasses {@code Grid} and {@code SelfAnalyzingGrid}.
  * 
  * This class exposes methods for traversing over the empty or nonempty cells of a grid or one of
  * its rows, columns or boxes. It also exposes methods that check whether a grid is consistent and
@@ -65,7 +65,7 @@ public class UnmodifiableGrid {
     /**
      * Returns the digit at the specified cell, if that cell is not blank.
      * 
-     * @throws IndexOutOfBoundsException if either cell coordinate is < 0 or >= 9
+     * @throws IndexOutOfBoundsException if either cell coordinate is {@code < 0} or {@code >= 9}
      */
     public final Optional<Digit> digitAt(int row, int column) {
         return data.get(arrayIndex(Cell.of(row, column)));
@@ -81,7 +81,7 @@ public class UnmodifiableGrid {
     /**
      * Sets the optional digit at the cell with the specified coordinates.
      * 
-     * @throws IndexOutOfBoundsException if either cell coordinate is < 0 or >= 9
+     * @throws IndexOutOfBoundsException if either cell coordinate is {@code < 0} or {@code >= 9}
      */
     protected final void setOptionalDigit(int row, int column, Optional<Digit> d) {
         setOptionalDigit(Cell.of(row, column), d);

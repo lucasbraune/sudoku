@@ -47,7 +47,7 @@ public class Grid extends UnmodifiableGrid {
      * Sets the digit at the cell with the specified coordinates.
      * 
      * @throws GridOverwriteException    if the cell is not blank
-     * @throws IndexOutOfBoundsException if either coordinate is < 0 or >= 9
+     * @throws IndexOutOfBoundsException if either coordinate is {@code < 0} or {@code >= 9}
      * @implNote this method is implemented in terms of the nonfinal method {@code setDigit(Cell, Digit)}
      */
     public final void setDigit(int row, int column, Digit d) {
