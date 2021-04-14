@@ -3,7 +3,7 @@ A program that solves Sudoku puzzles
 
 ## Building and running
 
-Requires Java and Maven. To build this project, create a local copy of this repository and exectute `mvn package` from its root. To run it, execute
+Requires Java 8 and Maven. To build this project, create a local copy of this repository and exectute `mvn package` from its root. To run it, execute
 ```
 java -jar target/sudoku-1.0-SNAPSHOT.jar
 ```
