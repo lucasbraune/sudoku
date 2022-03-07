@@ -31,11 +31,11 @@ public class TestsWithFirstPuzzle {
                 + "700000008" + "006708200" + "002609500" + "800203009" + "005010300");
     }
 
-    private SelfAnalyzingGrid sag = null;
+    private AnnotatedGrid sag = null;
 
     @BeforeEach
     public void beforeEach() {
-        sag = SelfAnalyzingGrid.fromOrdinaryGrid(grid);
+        sag = AnnotatedGrid.fromOrdinaryGrid(grid);
     }
 
     @Test

@@ -19,7 +19,7 @@ import sudoku.GridElements.Row;
  * Instances of this class can be created with the {@code fromString} factory method and with this
  * class' unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
  * Alternatively, instances can be created using the constructors and factory methods of the
- * subclasses {@code Grid} and {@code SelfAnalyzingGrid}.
+ * subclasses {@code Grid} and {@code AnnotatedGrid}.
  * 
  * This class exposes methods for traversing over the empty or nonempty cells of a grid or one of
  * its rows, columns or boxes. It also exposes methods that check whether a grid is consistent and

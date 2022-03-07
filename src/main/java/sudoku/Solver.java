@@ -16,10 +16,10 @@ public class Solver {
      * puzzles from Project Euler's Problem 96 can be solved in well under one second.
      */
     public static Optional<UnmodifiableGrid> solve(UnmodifiableGrid grid) {
-        return solve(SelfAnalyzingGrid.fromOrdinaryGrid(grid));
+        return solve(AnnotatedGrid.fromOrdinaryGrid(grid));
     }
 
-    private static Optional<UnmodifiableGrid> solve(SelfAnalyzingGrid grid) {
+    private static Optional<UnmodifiableGrid> solve(AnnotatedGrid grid) {
         while (grid.hasEmptyCell()) {
             if (!grid.isConsistent() || ranOutOfCandidates(grid)) {
                 return Optional.empty();
@@ -27,7 +27,7 @@ public class Solver {
             Cell cell = cellWithFewestCandidates(grid);
             while (multipleCandidatesExistFor(grid, cell)) {
                 Digit d = candidateFor(grid, cell);
-                SelfAnalyzingGrid clone = new SelfAnalyzingGrid(grid);
+                AnnotatedGrid clone = new AnnotatedGrid(grid);
                 clone.setDigit(cell, d);
                 Optional<UnmodifiableGrid> solved = solve(clone);
                 if (solved.isPresent()) {
@@ -40,15 +40,15 @@ public class Solver {
         return grid.isConsistent() ? Optional.of(new UnmodifiableGrid(grid)) : Optional.empty();
     }
 
-    private static Digit candidateFor(SelfAnalyzingGrid grid, Cell cell) {
+    private static Digit candidateFor(AnnotatedGrid grid, Cell cell) {
         return grid.candidates(cell).iterator().next();
     }
 
-    private static boolean multipleCandidatesExistFor(SelfAnalyzingGrid grid, Cell coords) {
+    private static boolean multipleCandidatesExistFor(AnnotatedGrid grid, Cell coords) {
         return grid.candidates(coords).size() > 1;
     }
 
-    private static boolean ranOutOfCandidates(SelfAnalyzingGrid grid) {
+    private static boolean ranOutOfCandidates(AnnotatedGrid grid) {
         for (Cell cell : grid.emptyCells()) {
             if (grid.candidates(cell).size() == 0) {
                 return true;
@@ -57,7 +57,7 @@ public class Solver {
         return false;
     }
 
-    private static Cell cellWithFewestCandidates(SelfAnalyzingGrid grid) {
+    private static Cell cellWithFewestCandidates(AnnotatedGrid grid) {
         try {
             return Collections.min(grid.emptyCells(),
                     Comparator.comparingInt(cell -> grid.candidates(cell).size()));

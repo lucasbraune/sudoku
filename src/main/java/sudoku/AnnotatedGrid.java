@@ -25,17 +25,17 @@ import sudoku.GridElements.Digit;
  * given cell, using its public {@code ruleOut} methods.
  * 
  * This class overrides the {@code equals()} and {@code hashCode()} methods of its super class,
- * while preserving their contracts. An instance of {@code SelfAnalyzingGrid} can only be equal to
- * other instances of {@code SelfAnalyzingGrid}. Two instances of this class are equal if, and only
+ * while preserving their contracts. An instance of {@code AnnotatedGrid} can only be equal to
+ * other instances of {@code AnnotatedGrid}. Two instances of this class are equal if, and only
  * if, their underlying grids and sets of candidates are equal.
  */
 @EqualsAndHashCode(callSuper = true)
-public final class SelfAnalyzingGrid extends Grid {
+public final class AnnotatedGrid extends Grid {
 
     private final Map<Cell, Set<Digit>> candidates;
 
     /** Creates an empty grid with all digits as candidates for all of its cells. */
-    public SelfAnalyzingGrid() {
+    public AnnotatedGrid() {
         super();
         candidates = new HashMap<>();
         for (Cell cell : GridElements.allCells()) {
@@ -44,10 +44,10 @@ public final class SelfAnalyzingGrid extends Grid {
     }
 
     /**
-     * Creates a deep copy of the specified {@code SelfAnalyzingGrid}. Both the underlying grid and
+     * Creates a deep copy of the specified {@code AnnotatedGrid}. Both the underlying grid and
      * candidate sets are copied.
      */
-    public SelfAnalyzingGrid(SelfAnalyzingGrid grid) {
+    public AnnotatedGrid(AnnotatedGrid grid) {
         super(grid);
         candidates = Util.copy(grid.candidates);
     }
@@ -91,15 +91,15 @@ public final class SelfAnalyzingGrid extends Grid {
     }
 
     /**
-     * Creates a self analyzing grid (SAG) from an ordinary grid. The SAG's underlying grid is a
-     * deep copy of the specified grid. The candidate sets are created as if by setting all digits
-     * as candidates for each empty cell, then ruling out the value of each nonempty cell as a
-     * candidate along the nonempty cell's row, column and box.
+     * Creates annotated from an ordinary grid. The annotated grid is a deep copy of the ordinary
+     * grid. The candidate sets are created as if by setting all digits as candidates for each
+     * empty cell, then ruling out the value of each nonempty cell as a candidate along thenonempty
+     * cell's row, column and box.
      */
-    public static SelfAnalyzingGrid fromOrdinaryGrid(UnmodifiableGrid grid) {
-        SelfAnalyzingGrid sag = new SelfAnalyzingGrid();
-        Grid.copy(grid, sag); // Calls the overriden method setDigit(Cell, Digit)
-        return sag;
+    public static AnnotatedGrid fromOrdinaryGrid(UnmodifiableGrid grid) {
+        AnnotatedGrid annotatedGrid = new AnnotatedGrid();
+        Grid.copy(grid, annotatedGrid); // Calls the overriden method setDigit(Cell, Digit)
+        return annotatedGrid;
     }
 
     @Override
