@@ -49,12 +49,16 @@ public class GridElements {
     }
 
     private static final List<Cell> cells = new ArrayList<>();
+    private static final List<Row> rows = new ArrayList<>();
 
     static {
         for (int i=0; i<9; i++) {
             for (int j=0; j<9; j++) {
                 cells.add(new Cell(i, j));
             }
+        }
+        for (int i=0; i<9; i++) {
+            rows.add(new Row(i));
         }
     }
 
@@ -118,11 +122,11 @@ public class GridElements {
 
         public static Row of(int index) {
             checkRowIndex(index);
-            return new Row(index);
+            return rows.get(index);
         }
 
         public static Row of(Cell cell) {
-            return new Row(cell.getRow());
+            return rows.get(cell.getRow());
         }
 
         @Override
