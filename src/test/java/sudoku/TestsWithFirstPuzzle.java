@@ -30,29 +30,29 @@ public class TestsWithFirstPuzzle {
                 + "700000008" + "006708200" + "002609500" + "800203009" + "005010300");
     }
 
-    private AnnotatedGrid sag = null;
+    private AnnotatedGrid annotatedGrid = null;
 
     @BeforeEach
     public void beforeEach() {
-        sag = AnnotatedGrid.fromOrdinaryGrid(grid);
+        annotatedGrid = AnnotatedGrid.fromOrdinaryGrid(grid);
     }
 
     @Test
     public void emptyCellsOverride() {
         Set<Cell> emptyCells = new HashSet<>();
         grid.emptyCells().forEach(emptyCells::add);
-        assertEquals(emptyCells, sag.emptyCells());
+        assertEquals(emptyCells, annotatedGrid.emptyCells());
     }
 
     @Test
     @DisplayName("A value is not a candidate if its appears in its cell's row, column and box.")
     public void noObviouslyWrongCandidates() {
-        for (Cell emptyCell : sag.emptyCells()) {
-            Set<Digit> candidates = sag.candidates(emptyCell);
+        for (Cell emptyCell : annotatedGrid.emptyCells()) {
+            Set<Digit> candidates = annotatedGrid.candidates(emptyCell);
             for (Iterable<Cell> gridElement : List.of(Row.of(emptyCell), Column.of(emptyCell),
                     Box.of(emptyCell))) {
-                for (Cell nonEmptyCell : sag.nonEmptyCells(gridElement)) {
-                    Digit d = sag.digitAt(nonEmptyCell).get();
+                for (Cell nonEmptyCell : annotatedGrid.nonEmptyCells(gridElement)) {
+                    Digit d = annotatedGrid.digitAt(nonEmptyCell).get();
                     assertFalse(candidates.contains(d),
                             d.toInt() + " is a candidate for cell " + nonEmptyCell);
                 }
@@ -62,8 +62,8 @@ public class TestsWithFirstPuzzle {
 
     @Test
     public void hasCandidatesForEveryEmptyCell() {
-        for (Cell cell : sag.emptyCells()) {
-            assertTrue(sag.candidates(cell).size() > 0);
+        for (Cell cell : annotatedGrid.emptyCells()) {
+            assertTrue(annotatedGrid.candidates(cell).size() > 0);
         }
     }
 
