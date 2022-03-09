@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import sudoku.Grid.GridOverwriteException;
 import sudoku.GridElements.Cell;
-import sudoku.GridElements.Digit;
 import sudoku.UnmodifiableGrid.GridParserException;
 
 public class BasicTests {

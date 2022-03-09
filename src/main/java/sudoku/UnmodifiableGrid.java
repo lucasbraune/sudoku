@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
-import sudoku.GridElements.Digit;
 import sudoku.GridElements.Row;
 
 /**
@@ -174,12 +173,12 @@ public class UnmodifiableGrid {
 
     /** Returns the empty cells in this grid */
     public Iterable<Cell> emptyCells() {
-        return emptyCells(GridElements.allCells());
+        return emptyCells(GridElements.cells());
     }
 
     /** Returns the nonempty cells in this grid */
     public Iterable<Cell> nonEmptyCells() {
-        return nonEmptyCells(GridElements.allCells());
+        return nonEmptyCells(GridElements.cells());
     }
 
     public boolean hasEmptyCell() {
@@ -208,15 +207,15 @@ public class UnmodifiableGrid {
      * solvable.
      */
     public final boolean isConsistent() {
-        for (Row row : GridElements.allRows()) {
+        for (Row row : GridElements.rows()) {
             if (!isConsistent(row))
                 return false;
         }
-        for (Column column : GridElements.allColumns()) {
+        for (Column column : GridElements.columns()) {
             if (!isConsistent(column))
                 return false;
         }
-        for (Box box : GridElements.allBoxes()) {
+        for (Box box : GridElements.boxes()) {
             if (!isConsistent(box))
                 return false;
         }

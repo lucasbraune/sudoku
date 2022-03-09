@@ -8,45 +8,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Contains static classes representing the elements of a Sudoku grid, namely digits, cells, rows,
+ * Contains static classes representing the elements of a Sudoku grid, namely cells, rows,
  * columns, and boxes. The classes representing the last three implement {@code Iterable<Cell>}.
  * This class also exposes methods for iterating over the cells, rows, columns and boxes of a grid.
  */
 @EqualsAndHashCode
 public class GridElements {
-
-    public static enum Digit {
-
-        ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE;
-
-        public int toInt() {
-            return ordinal() + 1;
-        }
-
-        /**
-         * @throws IllegalArgumentException if {@code d < 1} or {@code d > 9}
-         */
-        public static Digit fromInt(int d) {
-            if (d < 1 || d > 9) {
-                throw new IllegalArgumentException("Not a nonzero digit: " + d);
-            }
-            return values()[d - 1];
-        }
-
-        public char toChar() {
-            return Character.forDigit(toInt(), 10);
-        }
-
-        /**
-         * @throws IllegalArgumentException if {@code d < '1'} or {@code d > '9'}
-         */
-        public static Digit fromChar(char c) {
-            if (c < '1' || c > '9') {
-                throw new IllegalArgumentException("Not a nonzero digit: " + c);
-            }
-            return fromInt(Character.digit(c, 10));
-        }
-    }
 
     private static final List<Cell> cells = new ArrayList<>();
     private static final List<Row> rows = new ArrayList<>();
@@ -97,7 +64,6 @@ public class GridElements {
         private final int column;
 
         private Cell(int row, int column) {
-            checkIndices(row, column);
             this.row = row;
             this.column = column;
         }
@@ -232,19 +198,19 @@ public class GridElements {
 
     }
 
-    public static Iterable<Cell> allCells() {
+    public static Iterable<Cell> cells() {
         return cells;
     }
 
-    public static Iterable<Row> allRows() {
+    public static Iterable<Row> rows() {
         return rows;
     }
 
-    public static Iterable<Column> allColumns() {
+    public static Iterable<Column> columns() {
         return columns;
     }
 
-    public static Iterable<Box> allBoxes() {
+    public static Iterable<Box> boxes() {
         return boxes;
     }
 

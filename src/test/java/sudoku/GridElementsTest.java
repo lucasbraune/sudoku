@@ -26,7 +26,7 @@ public class GridElementsTest {
 
     @Test
     public void testRowIterator() {
-        for (Row row : GridElements.allRows()) {
+        for (Row row : GridElements.rows()) {
             List<Cell> actualCells = new ArrayList<>();
             for (Cell cell : row) {
                 actualCells.add(cell);
@@ -42,7 +42,7 @@ public class GridElementsTest {
 
     @Test
     public void testColumnIterator() {
-        for (Column column : GridElements.allColumns()) {
+        for (Column column : GridElements.columns()) {
             List<Cell> actualCells = new ArrayList<>();
             for (Cell cell : column) {
                 actualCells.add(cell);
@@ -58,7 +58,7 @@ public class GridElementsTest {
 
     @Test
     public void testBoxGetter() {
-        for (Cell cell : GridElements.allCells()) {
+        for (Cell cell : GridElements.cells()) {
             Cell corner = Box.of(cell).getCorner();
 
             assertEquals(cell.getRow() - cell.getRow() % 3, corner.getRow());
@@ -68,7 +68,7 @@ public class GridElementsTest {
 
     @Test
     public void testBoxIterator() {
-        for (Box box : GridElements.allBoxes()) {
+        for (Box box : GridElements.boxes()) {
             int cornerRow = box.getCorner().getRow();
             int cornerColumn = box.getCorner().getColumn();
             

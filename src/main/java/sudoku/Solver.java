@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import sudoku.GridElements.Cell;
-import sudoku.GridElements.Digit;
 
 public class Solver {
 

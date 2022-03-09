@@ -14,7 +14,6 @@ import sudoku.GridElements.Cell;
 import sudoku.GridElements.Row;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Box;
-import sudoku.GridElements.Digit;
 
 /**
  * A grid with a set of digits associated to each of its empty cells. The set contains the candidate
@@ -38,7 +37,7 @@ public final class AnnotatedGrid extends Grid {
     public AnnotatedGrid() {
         super();
         candidates = new HashMap<>();
-        for (Cell cell : GridElements.allCells()) {
+        for (Cell cell : GridElements.cells()) {
             candidates.put(cell, EnumSet.allOf(Digit.class));
         }
     }

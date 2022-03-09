@@ -16,7 +16,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
-import sudoku.GridElements.Digit;
 import sudoku.GridElements.Row;
 import sudoku.UnmodifiableGrid.GridParserException;
 

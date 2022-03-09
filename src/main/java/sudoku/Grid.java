@@ -2,7 +2,6 @@ package sudoku;
 
 import java.util.Optional;
 import sudoku.GridElements.Cell;
-import sudoku.GridElements.Digit;
 
 /**
  * A modifiable Sudoku grid.
@@ -62,7 +61,7 @@ public class Grid extends UnmodifiableGrid {
      * @implNote this method is implemented in terms of the nonfinal method {@code setDigit(Cell, Digit)}
      */
     public static void copy(UnmodifiableGrid source, Grid target) {
-        for (Cell cell : GridElements.allCells()) {
+        for (Cell cell : GridElements.cells()) {
             Optional<Digit> s = source.digitAt(cell);
             Optional<Digit> t = target.digitAt(cell);
             if (t.isPresent() && !s.equals(t)) {
