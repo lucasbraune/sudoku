@@ -37,23 +37,6 @@ public class GridElements {
         }
     }
 
-    public static void checkRowIndex(int row) {
-        if (row < 0 || row >= 9) {
-            throw new IndexOutOfBoundsException("Bad row index: " + row);
-        }
-    }
-
-    public static void checkColumnIndex(int column) {
-        if (column < 0 || column >= 9) {
-            throw new IndexOutOfBoundsException("Bad column index: " + column);
-        }
-    }
-
-    public static void checkIndices(int row, int column) {
-        checkRowIndex(row);
-        checkColumnIndex(column);
-    }
-
     @EqualsAndHashCode
     public static class Cell {
 
@@ -212,6 +195,23 @@ public class GridElements {
 
     public static Iterable<Box> boxes() {
         return boxes;
+    }
+
+    public static void checkRowIndex(int row) {
+        if (row < 0 || row >= 9) {
+            throw new IndexOutOfBoundsException("Bad row index: " + row);
+        }
+    }
+
+    public static void checkColumnIndex(int column) {
+        if (column < 0 || column >= 9) {
+            throw new IndexOutOfBoundsException("Bad column index: " + column);
+        }
+    }
+
+    public static void checkIndices(int row, int column) {
+        checkRowIndex(row);
+        checkColumnIndex(column);
     }
 
 }
