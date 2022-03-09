@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
+import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
 
 public class GridElementsTest {
@@ -25,19 +26,63 @@ public class GridElementsTest {
 
     @Test
     public void testRowIterator() {
-        for (int i=0; i<9; i++) {
-            Row row = Row.of(i);
-            
-            List<Cell> expectedCells = new ArrayList<>();
-            for (int j=0; j<9; j++) {
-                expectedCells.add(Cell.of(i, j));
-            }
-            
+        for (Row row : GridElements.allRows()) {
             List<Cell> actualCells = new ArrayList<>();
             for (Cell cell : row) {
                 actualCells.add(cell);
             }
 
+            List<Cell> expectedCells = new ArrayList<>();
+            for (int j=0; j<9; j++) {
+                expectedCells.add(Cell.of(row.getIndex(), j));
+            }
+            assertEquals(expectedCells, actualCells);
+        }
+    }
+
+    @Test
+    public void testColumnIterator() {
+        for (Column column : GridElements.allColumns()) {
+            List<Cell> actualCells = new ArrayList<>();
+            for (Cell cell : column) {
+                actualCells.add(cell);
+            }
+            
+            List<Cell> expectedCells = new ArrayList<>();
+            for (int i=0; i<9; i++) {
+                expectedCells.add(Cell.of(i, column.getIndex()));
+            }
+            assertEquals(expectedCells, actualCells);
+        }
+    }
+
+    @Test
+    public void testBoxGetter() {
+        for (Cell cell : GridElements.allCells()) {
+            Cell corner = Box.of(cell).getCorner();
+
+            assertEquals(cell.getRow() - cell.getRow() % 3, corner.getRow());
+            assertEquals(cell.getColumn() - cell.getColumn() % 3, corner.getColumn());
+        }
+    }
+
+    @Test
+    public void testBoxIterator() {
+        for (Box box : GridElements.allBoxes()) {
+            int cornerRow = box.getCorner().getRow();
+            int cornerColumn = box.getCorner().getColumn();
+            
+            List<Cell> actualCells = new ArrayList<>();
+            for (Cell cell : box) {
+                actualCells.add(cell);
+            }
+            
+            List<Cell> expectedCells = new ArrayList<>();
+            for (int i=0; i<3; i++) {
+                for (int j=0; j<3; j++) {
+                    expectedCells.add(Cell.of(cornerRow + i, cornerColumn + j));
+                }
+            }
             assertEquals(expectedCells, actualCells);
         }
     }

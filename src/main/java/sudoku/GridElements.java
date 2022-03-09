@@ -50,6 +50,8 @@ public class GridElements {
 
     private static final List<Cell> cells = new ArrayList<>();
     private static final List<Row> rows = new ArrayList<>();
+    private static final List<Column> columns = new ArrayList<>();
+    private static final List<Box> boxes = new ArrayList<>();
 
     static {
         for (int i=0; i<9; i++) {
@@ -59,6 +61,12 @@ public class GridElements {
         }
         for (int i=0; i<9; i++) {
             rows.add(new Row(i));
+            columns.add(new Column(i));
+        }
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                boxes.add(new Box(3 * i, 3 * j));
+            }
         }
     }
 
@@ -121,12 +129,11 @@ public class GridElements {
         }
 
         public static Row of(int index) {
-            checkRowIndex(index);
             return rows.get(index);
         }
 
         public static Row of(Cell cell) {
-            return rows.get(cell.getRow());
+            return Row.of(cell.getRow());
         }
 
         @Override
@@ -159,12 +166,11 @@ public class GridElements {
         }
 
         public static Column of(int index) {
-            checkColumnIndex(index);
-            return new Column(index);
+            return columns.get(index);
         }
 
         public static Column of(Cell cell) {
-            return new Column(cell.getColumn());
+            return Column.of(cell.getColumn());
         }
 
         @Override
@@ -195,16 +201,16 @@ public class GridElements {
         private final Cell corner;
 
         private Box(int row, int column) {
-            corner = Cell.of(3 * (row / 3), 3 * (column / 3));
+            corner = Cell.of(row - row % 3, column - column % 3);
         }
 
         public static Box of(int row, int column) {
             checkIndices(row, column);
-            return new Box(row, column);
+            return boxes.get(3 * (row / 3) + column / 3);
         }
 
         public static Box of(Cell cell) {
-            return new Box(cell.getRow(), cell.getColumn());
+            return Box.of(cell.getRow(), cell.getColumn());
         }
 
         @Override
@@ -227,71 +233,19 @@ public class GridElements {
     }
 
     public static Iterable<Cell> allCells() {
-        return () -> new Iterator<Cell>() {
-            private int i = 0; // Loop variable
-
-            @Override
-            public boolean hasNext() {
-                return i < 81;
-            }
-
-            @Override
-            public Cell next() {
-                Cell cell = Cell.of(i / 9, i % 9);
-                ++i;
-                return cell;
-            }
-        };
+        return cells;
     }
 
     public static Iterable<Row> allRows() {
-        return () -> new Iterator<Row>() {
-            private int i = 0; // Loop variable
-
-            @Override
-            public boolean hasNext() {
-                return i < 9;
-            }
-
-            @Override
-            public Row next() {
-                return Row.of(i++);
-            }
-        };
+        return rows;
     }
 
     public static Iterable<Column> allColumns() {
-        return () -> new Iterator<Column>() {
-            private int i = 0; // Loop variable
-
-            @Override
-            public boolean hasNext() {
-                return i < 9;
-            }
-
-            @Override
-            public Column next() {
-                return Column.of(i++);
-            }
-        };
+        return columns;
     }
 
     public static Iterable<Box> allBoxes() {
-        return () -> new Iterator<Box>() {
-            private int i = 0; // Loop variable
-
-            @Override
-            public boolean hasNext() {
-                return i < 9;
-            }
-
-            @Override
-            public Box next() {
-                Box next = Box.of(3 * (i / 3), 3 * (i % 3));
-                ++i;
-                return next;
-            }
-        };
+        return boxes;
     }
 
 }
