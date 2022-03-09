@@ -1,6 +1,8 @@
 package sudoku;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -46,6 +48,16 @@ public class GridElements {
         }
     }
 
+    private static final List<Cell> cells = new ArrayList<>();
+
+    static {
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                cells.add(new Cell(i, j));
+            }
+        }
+    }
+
     public static void checkRowIndex(int row) {
         if (row < 0 || row >= 9) {
             throw new IndexOutOfBoundsException("Bad row index: " + row);
@@ -79,7 +91,12 @@ public class GridElements {
         }
 
         public static Cell of(int row, int column) {
-            return new Cell(row, column);
+            checkIndices(row, column);
+            return cells.get(index(row, column));
+        }
+
+        private static int index(int row, int column) {
+            return 9 * row + column;
         }
 
         @Override
