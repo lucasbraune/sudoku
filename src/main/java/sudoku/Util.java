@@ -11,10 +11,11 @@ import java.util.function.Predicate;
 public class Util {
 
     /**
-     * Filters the given range, keeping its elements for which the specified predicate is true, and
-     * removing the rest.
+     * Filters the given range, keeping its elements for which the specified
+     * predicate is true, and removing the rest.
      */
-    public static <T> Iterable<T> filter(Iterable<? extends T> range,
+    public static <T> Iterable<T> filter(
+            Iterable<? extends T> range,
             Predicate<? super T> predicate) {
         return () -> new Iterator<T>() {
 
@@ -46,7 +47,8 @@ public class Util {
     }
 
     /**
-     * Returns a deep copy of a map whose values are set of objets of an enumeration class.
+     * Returns a deep copy of a map whose values are set of objets of an enumeration
+     * class.
      */
     public static <K, E extends Enum<E>> Map<K, Set<E>> copy(
             Map<? extends K, ? extends Set<E>> map) {
