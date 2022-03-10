@@ -8,9 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Contains static classes representing the elements of a Sudoku grid, namely cells, rows,
- * columns, and boxes. The classes representing the last three implement {@code Iterable<Cell>}.
- * This class also exposes methods for iterating over the cells, rows, columns and boxes of a grid.
+ * Contains static classes representing the elements of a Sudoku grid, namely
+ * cells, rows, columns, and boxes. The classes representing the last three
+ * implement {@code Iterable<Cell>}. This class also exposes methods for
+ * iterating over the cells, rows, columns and boxes of a grid.
  */
 @EqualsAndHashCode
 public class GridElements {
@@ -21,17 +22,17 @@ public class GridElements {
     private static final List<Box> boxes = new ArrayList<>();
 
     static {
-        for (int i=0; i<9; i++) {
-            for (int j=0; j<9; j++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 cells.add(new Cell(i, j));
             }
         }
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             rows.add(new Row(i));
             columns.add(new Column(i));
         }
-        for (int i=0; i<3; i++) {
-            for (int j=0; j<3; j++) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 boxes.add(new Box(3 * i, 3 * j));
             }
         }
@@ -51,6 +52,9 @@ public class GridElements {
             this.column = column;
         }
 
+        /**
+         * @throws IndexOutOfBoundsException
+         */
         public static Cell of(int row, int column) {
             checkIndices(row, column);
             return cells.get(index(row, column));
@@ -77,6 +81,9 @@ public class GridElements {
             this.index = index;
         }
 
+        /**
+         * @throws IndexOutOfBoundsException
+         */
         public static Row of(int index) {
             return rows.get(index);
         }
@@ -114,6 +121,9 @@ public class GridElements {
             this.index = index;
         }
 
+        /**
+         * @throws IndexOutOfBoundsException
+         */
         public static Column of(int index) {
             return columns.get(index);
         }
@@ -153,6 +163,9 @@ public class GridElements {
             corner = Cell.of(row - row % 3, column - column % 3);
         }
 
+        /**
+         * @throws IndexOutOfBoundsException
+         */
         public static Box of(int row, int column) {
             checkIndices(row, column);
             return boxes.get(3 * (row / 3) + column / 3);
@@ -197,19 +210,28 @@ public class GridElements {
         return boxes;
     }
 
-    public static void checkRowIndex(int row) {
+    /**
+     * @throws IndexOutOfBoundsException
+     */
+    private static void checkRowIndex(int row) {
         if (row < 0 || row >= 9) {
             throw new IndexOutOfBoundsException("Bad row index: " + row);
         }
     }
 
-    public static void checkColumnIndex(int column) {
+    /**
+     * @throws IndexOutOfBoundsException
+     */
+    private static void checkColumnIndex(int column) {
         if (column < 0 || column >= 9) {
             throw new IndexOutOfBoundsException("Bad column index: " + column);
         }
     }
 
-    public static void checkIndices(int row, int column) {
+    /**
+     * @throws IndexOutOfBoundsException
+     */
+    private static void checkIndices(int row, int column) {
         checkRowIndex(row);
         checkColumnIndex(column);
     }

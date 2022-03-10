@@ -15,7 +15,7 @@ import sudoku.exceptions.GridOverwriteException;
 import sudoku.exceptions.GridParserException;
 
 /**
- * A 9 x 9 non-overwriteable Sudoku grid.
+ * A 9 x 9 Sudoku grid.
  * 
  * This class exposes methods for traversing over the empty or nonempty cells of
  * a grid or one of its rows, columns or boxes. It also exposes methods that
