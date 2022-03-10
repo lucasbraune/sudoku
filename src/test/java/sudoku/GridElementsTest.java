@@ -2,6 +2,7 @@ package sudoku;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,9 @@ import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
 
 public class GridElementsTest {
-    
+
     @Test
-    public void testCellGetter() {
+    public void testGetCell() {
         for (int row=0; row<9; row++) {
             for (int col=0; col<9; col++) {
                 Cell cell = Cell.of(row, col);
@@ -22,6 +23,14 @@ public class GridElementsTest {
                 assertEquals(col, cell.getColumn());
             }
         }
+    }
+
+    @Test
+    public void testGetCellWithBadIndices() {
+        assertThrows(IndexOutOfBoundsException.class, () -> { Cell.of(-1, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { Cell.of(9, 0); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { Cell.of(0, -1); });
+        assertThrows(IndexOutOfBoundsException.class, () -> { Cell.of(0, 9); });
     }
 
     @Test

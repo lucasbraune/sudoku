@@ -14,11 +14,11 @@ public class Solver {
      * This method offers correctness, but not a performance guarantee. On my machine, all 50
      * puzzles from Project Euler's Problem 96 can be solved in well under one second.
      */
-    public static Optional<UnmodifiableGrid> solve(UnmodifiableGrid grid) {
+    public static Optional<Grid> solve(Grid grid) {
         return solve(AnnotatedGrid.fromOrdinaryGrid(grid));
     }
 
-    private static Optional<UnmodifiableGrid> solve(AnnotatedGrid grid) {
+    private static Optional<Grid> solve(AnnotatedGrid grid) {
         while (grid.hasEmptyCell()) {
             if (!grid.isConsistent() || ranOutOfCandidates(grid)) {
                 return Optional.empty();
@@ -28,7 +28,7 @@ public class Solver {
                 Digit d = candidateFor(grid, cell);
                 AnnotatedGrid clone = new AnnotatedGrid(grid);
                 clone.setDigit(cell, d);
-                Optional<UnmodifiableGrid> solved = solve(clone);
+                Optional<Grid> solved = solve(clone);
                 if (solved.isPresent()) {
                     return solved;
                 }
@@ -36,7 +36,7 @@ public class Solver {
             }
             grid.setDigit(cell, candidateFor(grid, cell));
         }
-        return grid.isConsistent() ? Optional.of(new UnmodifiableGrid(grid)) : Optional.empty();
+        return grid.isConsistent() ? Optional.of(new Grid(grid)) : Optional.empty();
     }
 
     private static Digit candidateFor(AnnotatedGrid grid, Cell cell) {

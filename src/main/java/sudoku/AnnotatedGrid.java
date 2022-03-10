@@ -99,7 +99,7 @@ public final class AnnotatedGrid extends Grid {
      * each nonempty cell as a candidate along thenonempty cell's row, column and
      * box.
      */
-    public static AnnotatedGrid fromOrdinaryGrid(UnmodifiableGrid grid) {
+    public static AnnotatedGrid fromOrdinaryGrid(Grid grid) {
         AnnotatedGrid annotatedGrid = new AnnotatedGrid();
         Grid.copy(grid, annotatedGrid); // Calls the overriden method setDigit(Cell, Digit)
         return annotatedGrid;
@@ -116,7 +116,6 @@ public final class AnnotatedGrid extends Grid {
     }
 
     /**
-     * 
      * Returns a set of candidates for value of the specified cell in a solution of
      * this grid. This set is guaranteed to contain the value of this cell in every
      * solution of this grid if the user of this grid never calls its

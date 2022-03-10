@@ -21,12 +21,12 @@ import lombok.Getter;
 public class TestsWithAllPuzzles {
 
     @Getter
-    private List<UnmodifiableGrid> grids = null;
+    private List<Grid> grids = null;
 
-    private static List<UnmodifiableGrid> readGridsFromInput() throws IOException {
-        List<UnmodifiableGrid> grids = new ArrayList<>();
+    private static List<Grid> readGridsFromInput() throws IOException {
+        List<Grid> grids = new ArrayList<>();
         try (BufferedReader input = new BufferedReader(new FileReader("src/main/resources/puzzles"))) {
-            for (Optional<UnmodifiableGrid> optGrid = App.readGrid(input); optGrid
+            for (Optional<Grid> optGrid = App.readGrid(input); optGrid
                     .isPresent(); optGrid = App.readGrid(input)) {
                 grids.add(optGrid.get());
             }
@@ -46,14 +46,14 @@ public class TestsWithAllPuzzles {
 
     @ParameterizedTest
     @MethodSource("getGrids")
-    public void isConsistent(UnmodifiableGrid grid) {
+    public void isConsistent(Grid grid) {
         assertTrue(grid.isConsistent());
     }
 
     @ParameterizedTest
     @MethodSource("getGrids")
     @Timeout(value = 1, unit = TimeUnit.SECONDS)
-    public void canSolve(UnmodifiableGrid grid) {
+    public void canSolve(Grid grid) {
         assertTrue(Solver.solve(grid).isPresent());
     }
 }

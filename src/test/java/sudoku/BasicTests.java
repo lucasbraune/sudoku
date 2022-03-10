@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import sudoku.Grid.GridOverwriteException;
 import sudoku.GridElements.Cell;
-import sudoku.UnmodifiableGrid.GridParserException;
+import sudoku.Grid.GridParserException;
 
 public class BasicTests {
 
@@ -15,20 +15,11 @@ public class BasicTests {
         Grid grid = new Grid();
         Cell cell = Cell.of(0, 0);
         assertEquals(Optional.<Digit>empty(), grid.digitAt(cell));
-        grid.setDigit(0, 0, Digit.ONE);
+        grid.setDigit(Cell.of(0, 0), Digit.ONE);
         assertEquals(Digit.ONE, grid.digitAt(cell).get());
         assertThrows(GridOverwriteException.class, () -> {
-            grid.setDigit(0, 0, Digit.ONE);
+            grid.setDigit(Cell.of(0, 0), Digit.ONE);
         });
-    }
-
-    @Test
-    public void badGridAccess() {
-        UnmodifiableGrid grid = new Grid();
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digitAt(-1, 0); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digitAt(9, 0); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digitAt(0, -1); });
-        assertThrows(IndexOutOfBoundsException.class, () -> { grid.digitAt(0, 9); });
     }
 
     @Test
@@ -52,8 +43,8 @@ public class BasicTests {
             "002609500" +
             "800203009" +
             "005010300";
-        UnmodifiableGrid grid = UnmodifiableGrid.fromString(gridAsString);
-        assertEquals(Digit.THREE, grid.digitAt(0, 2).get());
+        Grid grid = Grid.fromString(gridAsString);
+        assertEquals(Digit.THREE, grid.digitAt(Cell.of(0, 2)).get());
         assertEquals(gridAsString, grid.toString());
     }
 

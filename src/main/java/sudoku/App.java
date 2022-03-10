@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import sudoku.GridElements.Cell;
-import sudoku.UnmodifiableGrid.GridParserException;
+import sudoku.Grid.GridParserException;
 
 public class App {
 
@@ -28,10 +28,10 @@ public class App {
             throws IOException {
         int inputCounter = 0;
         int projectEulerSum = 0;
-        for (Optional<UnmodifiableGrid> grid = readGrid(input); grid.isPresent(); grid =
+        for (Optional<Grid> grid = readGrid(input); grid.isPresent(); grid =
                 readGrid(input)) {
             ++inputCounter;
-            Optional<UnmodifiableGrid> solved = Solver.solve(grid.get());
+            Optional<Grid> solved = Solver.solve(grid.get());
             if (solved.isPresent()) {
                 String solvedAsString = addLineFeeds(solved.get().toString());
                 output.write("Solution to input " + inputCounter + ":\n" + solvedAsString + "\n");
@@ -59,12 +59,12 @@ public class App {
      * 
      * @throws IOException
      */
-    public static Optional<UnmodifiableGrid> readGrid(BufferedReader input) throws IOException {
+    public static Optional<Grid> readGrid(BufferedReader input) throws IOException {
         Stack<String> rows = new Stack<String>();
         while (rows.size() < 9) {
             String line = input.readLine();
             if (line == null) {
-                return Optional.<UnmodifiableGrid>empty();
+                return Optional.<Grid>empty();
             }
             if (representsRow(line)) {
                 rows.push(line);
@@ -74,7 +74,7 @@ public class App {
         }
         String gridAsString = rows.stream().collect(Collectors.joining());
         try {
-            return Optional.of(UnmodifiableGrid.fromString(gridAsString));
+            return Optional.of(Grid.fromString(gridAsString));
         } catch (GridParserException gpe) {
             // Doesn't happen
             throw new AssertionError();
@@ -110,11 +110,12 @@ public class App {
      * 
      * @throws IllegalArgumentException if one of the first three digits of the first row of the specified grid is blank
      */
-    public static int threeDigitNumber(UnmodifiableGrid solved) {
+    public static int threeDigitNumber(Grid solved) {
         List<Integer> digits = new ArrayList<>();
         for (int j=0; j<3; j++) {
             try {
-                digits.add(solved.digitAt(0, j).get().toInt());
+                int d = solved.digitAt(Cell.of(0, j)).get().toInt();
+                digits.add(d);
             } catch (NoSuchElementException e) {
                 throw new IllegalArgumentException("Grid has blank at " + Cell.of(0, j));
             }

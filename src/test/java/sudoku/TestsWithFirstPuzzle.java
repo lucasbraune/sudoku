@@ -17,16 +17,16 @@ import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
-import sudoku.UnmodifiableGrid.GridParserException;
+import sudoku.Grid.GridParserException;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class TestsWithFirstPuzzle {
 
-    private UnmodifiableGrid grid = null;
+    private Grid grid = null;
 
     @BeforeAll
     public void beforeAll() throws GridParserException {
-        grid = UnmodifiableGrid.fromString("003020600" + "900305001" + "001806400" + "008102900"
+        grid = Grid.fromString("003020600" + "900305001" + "001806400" + "008102900"
                 + "700000008" + "006708200" + "002609500" + "800203009" + "005010300");
     }
 
@@ -69,7 +69,7 @@ public class TestsWithFirstPuzzle {
 
     @Test
     public void solveFirstPuzzle() {
-        Optional<UnmodifiableGrid> solved = Solver.solve(grid);
+        Optional<Grid> solved = Solver.solve(grid);
         assertTrue(solved.isPresent());
         assertTrue(solved.get().isSolved());
     }
