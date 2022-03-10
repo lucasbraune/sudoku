@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import sudoku.Grid.GridOverwriteException;
 import sudoku.GridElements.Cell;
-import sudoku.Grid.GridParserException;
+import sudoku.exceptions.GridOverwriteException;
+import sudoku.exceptions.GridParserException;
 
 public class BasicTests {
 

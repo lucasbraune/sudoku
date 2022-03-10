@@ -11,18 +11,15 @@ import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
+import sudoku.exceptions.GridOverwriteException;
+import sudoku.exceptions.GridParserException;
 
 /**
- * An unmodifiable 9 x 9 Sudoku grid.
+ * A 9 x 9 non-overwriteable Sudoku grid.
  * 
- * Instances of this class can be created with the {@code fromString} factory method and with this
- * class' unique public constructor, which makes a deep copy of another {@code UnmodifiableGrid}.
- * Alternatively, instances can be created using the constructors and factory methods of the
- * subclasses {@code Grid} and {@code AnnotatedGrid}.
- * 
- * This class exposes methods for traversing over the empty or nonempty cells of a grid or one of
- * its rows, columns or boxes. It also exposes methods that check whether a grid is consistent and
- * whether it is solved.
+ * This class exposes methods for traversing over the empty or nonempty cells of
+ * a grid or one of its rows, columns or boxes. It also exposes methods that
+ * check whether a grid is consistent and whether it is solved.
  */
 @EqualsAndHashCode
 public class Grid {
@@ -30,23 +27,20 @@ public class Grid {
     private final List<Optional<Digit>> data;
 
     /**
-     * Constructs a deep of the specified grid.
+     * Constructs a grid all of whose cells are blank;
      */
-    public Grid(Grid grid) {
-        if (grid == null) {
-            throw new NullPointerException();
-        }
-        data = new ArrayList<>(grid.data);
-    }
-
-    /**
-     * Constructs unmodifiable grid all of whose cells are blank;
-     */
-    protected Grid() {
+    public Grid() {
         data = new ArrayList<>();
         for (int i = 0; i < 81; i++) {
             data.add(Optional.empty());
         }
+    }
+
+    /**
+     * Constructs a deep copy of the specified grid.
+     */
+    public Grid(Grid grid) {
+        data = new ArrayList<>(grid.data);
     }
 
     private static int index(Cell cell) {
@@ -60,20 +54,8 @@ public class Grid {
         return data.get(index(cell));
     }
 
-    public static class GridOverwriteException extends RuntimeException {
-
-        public GridOverwriteException(Cell cell) {
-            super("Illegal attempt to overwrite cell " + cell);
-        }
-
-        /**
-         * See documentation of {@link java.io.Serializable}.
-         */
-        private static final long serialVersionUID = 1L;
-    }
-
     /**
-     * Sets the digit at the cell with the specified coordinates.
+     * Sets the digit at the specified cell.
      * 
      * @throws GridOverwriteException if the cell is not blank
      */
@@ -85,11 +67,13 @@ public class Grid {
     }
 
     /**
-     * Copies a source UnmodifiableGrid onto a target Grid.
+     * Copies a source grid onto a target grid.
      * 
-     * @throws GridOverwriteException if the target grid has a nonempty cell that is either not set
-     *                                or set to a different value on the source grid
-     * @implNote this method is implemented in terms of the nonfinal method {@code setDigit(Cell, Digit)}
+     * @throws GridOverwriteException if the target grid has a nonempty cell that is
+     *                                either not set or set to a different value on
+     *                                the source grid
+     * @implNote this method is implemented in terms of the nonfinal method
+     *           {@code setDigit(Cell, Digit)}
      */
     public static void copy(Grid source, Grid target) {
         for (Cell cell : GridElements.cells()) {
@@ -109,13 +93,13 @@ public class Grid {
     }
 
     /**
-     * Returns the 81-character string obtained by filling the blank cells in this grid with zeros,
-     * then concatenating rows.
+     * Returns the 81-character string obtained by filling the blank cells in this
+     * grid with zeros, then concatenating rows.
      * 
      * Sample output:
      * 
-     * "003020600" + "900305001" + "001806400" + "008102900" + "700000008" + "006708200" +
-     * "002609500" + "800203009" + "005010300"
+     * "003020600" + "900305001" + "001806400" + "008102900" + "700000008" +
+     * "006708200" + "002609500" + "800203009" + "005010300"
      */
     @Override
     public final String toString() {
@@ -126,31 +110,21 @@ public class Grid {
         return sb.toString();
     }
 
-    public static final class GridParserException extends Exception {
-
-        public GridParserException(String message) {
-            super(message);
-        }
-
-        /**
-         * See documentation of {@link java.io.Serializable}.
-         */
-        private static final long serialVersionUID = -5219699469780289049L;
-    }
-
     /**
-     * @throws IllegalArgumentException if the given character is not a (radix 10) digit
+     * @throws IllegalArgumentException if the given character is not a (radix 10)
+     *                                  digit
      */
     private static Optional<Digit> optionalDigitFrom(char c) {
         return c == '0' ? Optional.empty() : Optional.of(Digit.fromChar(c));
     }
 
     /**
-     * Returns an UnmodifiableGrid whose string representation (obtained from the
+     * Returns a grid whose string representation (obtained from the
      * {@code Object.toString()} method) is the given string.
      * 
-     * @throws GridParserException if the given string has length different from 81 or contains a
-     *                             character that is not a (radix 10) digit
+     * @throws GridParserException if the given string has length different from 81
+     *                             or contains a character that is not a (radix 10)
+     *                             digit
      */
     public static Grid fromString(String str) throws GridParserException {
         if (str.length() != 81) {
@@ -172,16 +146,16 @@ public class Grid {
     }
 
     /**
-     * Returns the empty cells in the given range of cells (typically a row, a column, a box, or the
-     * whole grid).
+     * Returns the empty cells in the given range of cells (typically a row, a
+     * column, a box, or the whole grid).
      */
     public Iterable<Cell> emptyCells(Iterable<Cell> cells) {
         return Util.filter(cells, cell -> !digitAt(cell).isPresent());
     }
 
     /**
-     * Returns the nonempty cells in the given range of cells (typically a row, a column, a box, or
-     * the whole grid).
+     * Returns the nonempty cells in the given range of cells (typically a row, a
+     * column, a box, or the whole grid).
      */
     public Iterable<Cell> nonEmptyCells(Iterable<Cell> cells) {
         return Util.filter(cells, cell -> digitAt(cell).isPresent());
@@ -202,8 +176,8 @@ public class Grid {
     }
 
     /**
-     * Returns true if, and only if, the values in the nonempty cells within the specified range
-     * (typically a row, column or box) are all distinct.
+     * Returns true if, and only if, the values in the nonempty cells within the
+     * specified range (typically a row, column or box) are all distinct.
      */
     public final boolean isConsistent(Iterable<Cell> rowColumnOrBox) {
         Set<Digit> seen = EnumSet.noneOf(Digit.class);
@@ -218,9 +192,9 @@ public class Grid {
     }
 
     /**
-     * Returns true if, and only if, for each row, column or box, the values of the nonempty cells
-     * in the row, column, and box are distinct. This method does not determine whether this grid is
-     * solvable.
+     * Returns true if, and only if, for each row, column or box, the values of the
+     * nonempty cells in the row, column, and box are distinct. This method does not
+     * determine whether this grid is solvable.
      */
     public final boolean isConsistent() {
         for (Row row : GridElements.rows()) {

@@ -17,7 +17,7 @@ import sudoku.GridElements.Box;
 import sudoku.GridElements.Cell;
 import sudoku.GridElements.Column;
 import sudoku.GridElements.Row;
-import sudoku.Grid.GridParserException;
+import sudoku.exceptions.GridParserException;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class TestsWithFirstPuzzle {

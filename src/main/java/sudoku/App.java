@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import sudoku.GridElements.Cell;
-import sudoku.Grid.GridParserException;
+import sudoku.exceptions.GridParserException;
 
 public class App {
 
